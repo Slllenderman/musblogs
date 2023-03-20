@@ -2,9 +2,9 @@
 - Ура, это случилось! Мы дожили до создания общего профиля github))
 - Ниже будет лежать шпаргалка по работе в git. Я знаю что все здесь сверхразумы и умеют работать с гитом, но на всякий :)
 - Если что-то не понятно, с вопросами в группу!
-- 
-- Ссылка на дизайн: https://www.figma.com/file/ZWHIVhqMHXwho1CEuWAca5/Untitled?node-id=0-1&t=lkXQqbqGdV6Ne6sf-0
-- Ссылка на ветку с документацией: https://github.com/Slllenderman/MusBlogs/tree/docs
+
+- Ссылка на [дизайн(https://www.figma.com/file/ZWHIVhqMHXwho1CEuWAca5/Untitled?node-id=0-1&t=lkXQqbqGdV6Ne6sf-0)]
+- Ссылка на ветку с [документацией(https://github.com/Slllenderman/MusBlogs/tree/docs)]
 
 ## Немного о тонкостях работы
 - Основная ветка для слияния main. В ней собирается готовый функционал.
