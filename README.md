@@ -18,10 +18,7 @@
 ```
 - Далее инициализируем репозиторий и пулим себе:
 ```
-    git init
-    git remote add origin https://github.com/Slllenderman/MusBlogs/
-    git checkout -b main
-    git pull origin main
+    git clone https://github.com/Slllenderman/MusBlogs/
 ```    
 
 ## Хочу работать и так чтоб работало (создаём свою ветку)
