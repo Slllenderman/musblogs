@@ -1,11 +1,13 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { Header } from './components/Header/Header';
 
 function App() {
   return (
     <div>
-      <p>Hello!</p>
+      <Header />
     </div>
   );
 }
