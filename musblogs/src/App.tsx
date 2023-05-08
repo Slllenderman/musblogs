@@ -7,6 +7,7 @@ import { Settings } from './components/Settings/Settings';
 import { NewPost } from './components/NewPost/NewPost';
 import { Subscribers } from './components/Subscribers/Subscribers';
 import { Subscriptions } from './components/Subscriptions/Subscriptions';
+import { MainPage } from './components/MainPage/MainPage';
 import "./styles/base.scss";
 
 function App() {
@@ -17,7 +18,7 @@ function App() {
         <div className='dynamic_content'>
           <main>
             <Routes>
-              <Route path="/" element={<div>MainPage</div>} />
+              <Route path="/" element={<MainPage />} />
               <Route path="/login" element={<Login />} />
               <Route path="/registration" element={<Registration />} />
               <Route path="/subscribers" element={<Subscribers />} />
