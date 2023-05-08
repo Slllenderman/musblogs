@@ -9,6 +9,21 @@
         justify-content: space-between;
         align-items: center;
         align-content: center;
+
+        .date_img {
+            display: inline-flex;
+            flex: 1;
+            justify-content: center;
+            position: relative;
+            width: 1.6em;
+
+            img {
+                margin-left: 0;
+                padding: 0;
+                height: 1.2em;
+            }
+        }
+
         .date_input {
             margin-left: 0.7em;
             width: 5em;

@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import "./Settings.scss";
 import "../../styles/buttons.scss";
 import "../../styles/inputs.scss";
+import "../../styles/names.scss";
 import avatar from "../../images/user_toolkit/avatar.svg";
 import go_back from "../../images/form_toolkit/go_back.svg";
 import showing from "../../images/form_toolkit/showing.svg";
@@ -12,8 +13,32 @@ import { ImageDiv } from "../BasicComponents/ImageDiv/ImageDiv";
 import { Button } from "../BasicComponents/Button/Button";
 import { Input } from "../BasicComponents/Input/Input";
 import { DateInput } from "../BasicComponents/DateInput/DateInput";
+import { Checkbox } from "../BasicComponents/Checkbox/Checkbox";
 
 export const Settings: React.FC = () => {
+
+    const [showRegistration, setShowingReg] = useState(showing);
+    const [showBirthday, setShowingBirthday] = useState(showing);
+    const [getNote, setNote] = useState(true);
+
+    const changeShowingReg = (e: any) => {
+        if (showRegistration === showing)
+            setShowingReg(not_showing)
+        else
+            setShowingReg(showing)
+    }
+
+    const changeShowingBirthday = (e: any) => {
+        if (showBirthday === showing)
+            setShowingBirthday(not_showing)
+        else
+            setShowingBirthday(showing)
+    }
+
+    const changeNote = (e: any) => {
+        setNote(!getNote);
+    }
+
     return (
         <div className="feed">
             <div className="top_shadow"></div>
@@ -32,10 +57,10 @@ export const Settings: React.FC = () => {
                         <ImageDiv class="ch_avatar" src={avatar} alt="avatar" />
                         <div className="top_inputs">
                             <div className="reg_form">
-                                <div>
+                                <div className="desc_name">
                                     Регистрация: г.
                                 </div>
-                                <ImageDiv src={showing} class="reg_img" alt="showing" />
+                                <ImageDiv src={showRegistration} class="reg_img showing" alt="showing" onClickFunction={changeShowingReg} />
                             </div>
                             <div><Input class="basic_input" type="text" placeholder="Имя" /></div>
                             <div><Input class="basic_input" type="text" placeholder="Фамилия" /></div>
@@ -56,19 +81,21 @@ export const Settings: React.FC = () => {
                     </div>
                     <div className="birthday">
                         <div className="birthday_form">
-                            <span>День рождения: </span>
+                            <div className="name">День рождения: </div>
                             <div><DateInput /></div>
                         </div>
-                        <div>
-                            
+                        <div className="change_note">
+                            <div className="note other_info_name">
+                                Выводить предупреждение о дне рождении за 2 недели
+                            </div>
+                            <Checkbox value={getNote} onClickFunction={changeNote} />
                         </div>
-                        <ImageDiv src={showing} alt="showing" />
+                        <ImageDiv class="showing" src={showBirthday} alt="showing" onClickFunction={changeShowingBirthday} />
                     </div>
                     <div className="description">
-                        <div>Описание</div>
+                        <div>Описание:</div>
                         <div className="text">
                             <textarea className="basic_input">
-
                             </textarea>
                         </div>
                     </div>

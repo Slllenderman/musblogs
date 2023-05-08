@@ -31,3 +31,9 @@ export type PasswrodProps = {
     placeholder?: string,
     onChangeFunction?: (params: any) => any;
 }
+
+export type CheckboxProps = {
+    class?: string,
+    value: boolean,
+    onClickFunction?: (params: any) => any
+}

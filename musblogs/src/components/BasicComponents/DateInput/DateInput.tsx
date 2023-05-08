@@ -26,7 +26,7 @@ export const DateInput: React.FC = () => {
     return (
         <div className="calendar basic_input">
             <div className="content">
-                <ImageDiv src={calendar} alt="calendar" />
+                <ImageDiv src={calendar} class="date_img" alt="calendar" />
                 <div className="date_input">
                     <Input type="text" placeholder="дд.мм.гггг" />
                 </div>

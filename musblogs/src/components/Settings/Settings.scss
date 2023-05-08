@@ -4,6 +4,10 @@
     height: 100%;
     position: relative;
 
+    .showing {
+        height: 1.3em;
+    }
+
     .top_options {
         display: flex;
         flex: 1;
@@ -128,11 +132,29 @@
             align-items: center;
             align-content: center;
 
+            .change_note {
+                display: flex;
+                flex: 1;
+                align-items: center;
+                align-content: center;
+                margin-right: 1em;
+                margin-left: 0.3em;
+
+                .note {
+                    text-align: right;
+                    margin-right: 1em;
+                }
+            }
+
             .birthday_form {
                 display: flex;
                 flex: 1;
                 align-items: center;
                 align-content: center;
+                
+                .name {
+                    margin-right: 1em;
+                }
             }
 
             img {
@@ -149,6 +171,8 @@
                 .basic_input {
                     margin-top: 1vh;
                     width: 100% !important;
+                    min-height: 100px;
+                    resize: none;
                 }
             }
         }
