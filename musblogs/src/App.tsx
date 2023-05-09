@@ -9,6 +9,7 @@ import { Subscribers } from './components/Subscribers/Subscribers';
 import { Subscriptions } from './components/Subscriptions/Subscriptions';
 import { MainPage } from './components/MainPage/MainPage';
 import { PostPage } from './components/PostPage/PostPage';
+import { UserPage } from './components/UserPage/UserPage';
 import "./styles/base.scss";
 
 function App() {
@@ -26,9 +27,8 @@ function App() {
               <Route path="/subscriptions" element={<Subscriptions />} />
               <Route path="/settings" element={<Settings />} />
               <Route path="/new_post" element={<NewPost />} />
-              <Route path="/userpage" element={<div>user</div>} />
+              <Route path="/userpage" element={<UserPage />} />
               <Route path="/post/:id" element={<PostPage />} />
-              <Route path="/" element={<div></div>} />
               </Routes>    
           </main>
         </div>
