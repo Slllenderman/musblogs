@@ -23,7 +23,7 @@ export type UserProps = {
     avatar: string,
 }
 
-export type Comment = {
+export type CommentProps = {
     id: number,
     user: UserProps,
     date: string,

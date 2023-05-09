@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import "./MainPage.scss";
 import "../../styles/buttons.scss";
 import "../../styles/inputs.scss";
 import "../../styles/names.scss";

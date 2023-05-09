@@ -8,6 +8,7 @@ import { NewPost } from './components/NewPost/NewPost';
 import { Subscribers } from './components/Subscribers/Subscribers';
 import { Subscriptions } from './components/Subscriptions/Subscriptions';
 import { MainPage } from './components/MainPage/MainPage';
+import { PostPage } from './components/PostPage/PostPage';
 import "./styles/base.scss";
 
 function App() {
@@ -26,7 +27,7 @@ function App() {
               <Route path="/settings" element={<Settings />} />
               <Route path="/new_post" element={<NewPost />} />
               <Route path="/userpage" element={<div>user</div>} />
-              <Route path="/post/:id" element={<div></div>} />
+              <Route path="/post/:id" element={<PostPage />} />
               <Route path="/" element={<div></div>} />
               </Routes>    
           </main>
