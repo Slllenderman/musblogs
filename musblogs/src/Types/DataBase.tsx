@@ -40,3 +40,8 @@ export type PostProps = {
     reposts: number,
     likes: number,
 }
+
+export type TokenProps = {
+    access: string,
+    refresh: string,
+}
