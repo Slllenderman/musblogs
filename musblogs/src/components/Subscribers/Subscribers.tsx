@@ -6,42 +6,14 @@ import "../../styles/names.scss";
 import { GoBackLine } from "../GoBackLine/GoBackLine";
 import { UserProps } from "../../Types/DataBase";
 import { UserLine } from "../UserLine/UserLine";
+import { infSubs } from "../../store/infinity";
 
 export const Subscribers: React.FC = () => {
 
     const [users, setUsers] = useState<Array<UserProps>>([]);
 
     useEffect(() => {
-        setUsers([
-            {
-                id: 1,
-                firstname: "Firstname", 
-                lastname: "Lastname",
-                login: "nick1",
-                avatar: ""
-            },
-            {
-                id: 2,
-                firstname: "Firstname", 
-                lastname: "Lastname",
-                login: "nick2",
-                avatar: ""
-            },
-            {
-                id: 3,
-                firstname: "Firstname", 
-                lastname: "Lastname",
-                login: "nick3",
-                avatar: ""
-            }, 
-            {
-                id: 4,
-                firstname: "Firstname", 
-                lastname: "Lastname",
-                login: "nick4",
-                avatar: ""
-            }
-        ])
+        setUsers([...infSubs])
     }, [])
 
     return (

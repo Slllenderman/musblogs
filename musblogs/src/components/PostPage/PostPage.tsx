@@ -8,26 +8,9 @@ import { ImageDiv, Button } from "../BasicComponents/BasicComponents";
 import { GoBackLine } from "../GoBackLine/GoBackLine";
 import { Comment } from "../Comment/Comment";
 import { PostProps, CommentProps } from "../../Types/DataBase";
+import { infPost, infComments } from "../../store/infinity";
 
 export const PostPage: React.FC = () => {
-
-    const postText = "Текст поста, который был опубликован либо этим пользователем, либо репостнут на его страницу. Пост должен занимать не более 1500 символов? Скорее всего это значение должно быть меньше. Текст поста, который был опубликован либо этим пользователем, либо репостнут на его страницу."
-
-    const infPost: PostProps = {
-        id: 1,
-        user: {
-            id: 1,
-            firstname: "FirstName",
-            lastname: "LastName",
-            login: "nick1",
-            avatar: ""
-        },
-        date: "01.01.2023",
-        text: postText,
-        comments: 3,
-        reposts: 15,
-        likes: 1500
-    }
 
     const [formVisible, setFormVisible] = useState(false);
     const [post, setPost] = useState<PostProps>(infPost);
@@ -38,47 +21,7 @@ export const PostPage: React.FC = () => {
     }
 
     useEffect(() => {
-        setComments([
-            {
-                id: 1,
-                user: {
-                    id: 2,
-                    firstname: "FirstName",
-                    lastname: "LastName",
-                    login: "nick2",
-                    avatar: ""
-                },
-                date: "02.01.2023",
-                text: postText, 
-                post: 1,
-            },
-            {
-                id: 2,
-                user: {
-                    id: 3,
-                    firstname: "FirstName",
-                    lastname: "LastName",
-                    login: "nick3",
-                    avatar: ""
-                },
-                date: "02.01.2023",
-                text: postText, 
-                post: 1,
-            },
-            {
-                id: 3,
-                user: {
-                    id: 4,
-                    firstname: "FirstName",
-                    lastname: "LastName",
-                    login: "nick4",
-                    avatar: ""
-                },
-                date: "02.01.2023",
-                text: postText, 
-                post: 1,
-            }
-        ])
+        setComments([...infComments])
     }, [])
 
     return (

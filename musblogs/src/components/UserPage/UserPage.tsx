@@ -7,28 +7,11 @@ import { userToolkit } from "../../images/images";
 import { ImageDiv, Button } from "../BasicComponents/BasicComponents";
 import { Comment } from "../Comment/Comment";
 import { Post } from "../Post/Post";
-import { useNavigate } from "react-router-dom";
+import { infUser, infPosts, infComments } from "../../store/infinity";
 import { FullUserProps, PostProps, CommentProps } from "../../Types/DataBase";
+import { useNavigate } from "react-router-dom";
 
 export const UserPage: React.FC = () => {
-
-    const user_desc = "Описание пользователя, не занимающее более двух строк данного блока текста. То есть это около 500(?) символов или ещё меньше."
-
-    const infUser: FullUserProps = {
-        id: 1,
-        firstname: "FirstName", 
-        lastname: "LastName",
-        login: "nickname",
-        birthday: "24.07.2001",
-        link: "https://telegram.com",
-        location: "city",
-        description: user_desc,
-        registration: "01.01.2023",
-        avatar: "",
-        subscriptions: 100,
-        subscribes: 100,
-    }
-
     const navigate = useNavigate();
 
     const [showing, setShowing] = useState(true);
@@ -49,145 +32,9 @@ export const UserPage: React.FC = () => {
     }
 
     useEffect(() => {
-        let postText = "Текст поста, который был опубликован либо этим пользователем, либо репостнут на его страницу. Пост должен занимать не более 1500 символов? Скорее всего это значение должно быть меньше. Текст поста, который был опубликован либо этим пользователем, либо репостнут на его страницу."
-
-        setPosts([
-            {
-                id: 1,
-                user: {
-                    id: 1,
-                    firstname: "FirstName",
-                    lastname: "LastName",
-                    login: "nick1",
-                    avatar: "",
-                },
-                date: "01.01.2023",
-                text: postText,
-                comments: 10,
-                reposts: 5,
-                likes: 15
-            },
-            {
-                id: 2,
-                user: {
-                    id: 2,
-                    firstname: "FirstName",
-                    lastname: "LastName",
-                    login: "nick2",
-                    avatar: "",
-                },
-                date: "02.01.2023",
-                text: postText,
-                comments: 100,
-                reposts: 20,
-                likes: 65
-            },
-            {
-                id: 3,
-                user: {
-                    id: 3,
-                    firstname: "FirstName",
-                    lastname: "LastName",
-                    login: "nick3",
-                    avatar: "",
-                },
-                date: "03.01.2023",
-                text: postText,
-                comments: 1000,
-                reposts: 500,
-                likes: 1200
-            }
-        ])
-
-        setLikePosts([
-            {
-                id: 1,
-                user: {
-                    id: 1,
-                    firstname: "FirstName",
-                    lastname: "LastName",
-                    login: "nick1",
-                    avatar: "",
-                },
-                date: "01.01.2023",
-                text: postText,
-                comments: 10,
-                reposts: 5,
-                likes: 15
-            },
-            {
-                id: 2,
-                user: {
-                    id: 2,
-                    firstname: "FirstName",
-                    lastname: "LastName",
-                    login: "nick2",
-                    avatar: "",
-                },
-                date: "02.01.2023",
-                text: postText,
-                comments: 100,
-                reposts: 20,
-                likes: 65
-            },
-            {
-                id: 3,
-                user: {
-                    id: 3,
-                    firstname: "FirstName",
-                    lastname: "LastName",
-                    login: "nick3",
-                    avatar: "",
-                },
-                date: "03.01.2023",
-                text: postText,
-                comments: 1000,
-                reposts: 500,
-                likes: 1200
-            }
-        ])
-
-        setComments([
-            {
-                id: 1,
-                user: {
-                    id: 2,
-                    firstname: "FirstName",
-                    lastname: "LastName",
-                    login: "nick2",
-                    avatar: ""
-                },
-                date: "02.01.2023",
-                text: postText, 
-                post: 1,
-            },
-            {
-                id: 2,
-                user: {
-                    id: 3,
-                    firstname: "FirstName",
-                    lastname: "LastName",
-                    login: "nick3",
-                    avatar: ""
-                },
-                date: "02.01.2023",
-                text: postText, 
-                post: 1,
-            },
-            {
-                id: 3,
-                user: {
-                    id: 4,
-                    firstname: "FirstName",
-                    lastname: "LastName",
-                    login: "nick4",
-                    avatar: ""
-                },
-                date: "02.01.2023",
-                text: postText, 
-                post: 1,
-            }
-        ])
+        setPosts([...infPosts])
+        setLikePosts([...infPosts])
+        setComments([...infComments])
     }, [])
 
     useEffect(() => {
