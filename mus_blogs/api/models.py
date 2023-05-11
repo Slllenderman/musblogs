@@ -25,9 +25,9 @@ class Followers(models.Model):
 class Posts(models.Model):
     date = models.DateTimeField(auto_now_add=True)
     content = models.CharField(max_length=255)
-    likes_count = models.IntegerField()
+    likes_count = models.IntegerField(default=0)
     user_id = models.ForeignKey(Profile, on_delete=models.CASCADE)
-    repost_id = models.BooleanField(blank=True, null=True)
+    repost_id = models.IntegerField(default=-1)
 
 
 class Likes(models.Model):
