@@ -19,13 +19,41 @@ class FollowersViewset(viewsets.ModelViewSet):
             return qs.filter(user_id=user_id)
         return qs
 
+    def create(self, request, *args, **kwargs):
+        if not request.data.get('user_id') or not request.data.get('follower_id'):
+            raise ValidationError('user_id or follower_id is absent')
+
+        user_id = request.data.get('user_id')
+        follower_id = request.data.get('follower_id')
+        follower = serializers.FollowersSerializer(data=request.data)
+
+        if models.Followers.objects.filter(user_id=user_id).filter(follower_id=follower_id).count() != 0:
+            return Response(status=409, data='Follower already exist')
+
+        if follower.is_valid():
+            follower.save()
+            models.Profile.objects.filter(id=user_id).update(
+                followers_count=F('followers_count') + 1)
+            models.Profile.objects.filter(id=follower_id).update(
+                subscriptions_count=F('subscriptions_count') + 1)
+
+            return Response(data=follower.data, status=201)
+        else:
+            raise ValidationError('unable to parse body')
+
     def delete(self, request):
         qs = super().get_queryset()
         user_id = request.data.get('user_id')
         follower_id = request.data.get('follower_id')
+
         if user_id and follower_id:
             qs.filter(user_id=user_id).filter(follower_id=follower_id).delete()
+            models.Profile.objects.filter(id=user_id).update(
+                followers_count=F('followers_count') - 1)
+            models.Profile.objects.filter(id=follower_id).update(
+                subscriptions_count=F('subscriptions_count') - 1)
             return Response(data='deleted successfully', status=200)
+
         raise ValidationError('Invalid parameters')
 
 
@@ -58,7 +86,7 @@ class PostsViewset(viewsets.ModelViewSet):
 
     def put(self, request):
         if not request.data.get('content') or not request.data.get('user_id'):
-            raise ValidationError('Content or user is upsent')
+            raise ValidationError('Content or user is absent')
 
         post_id = request.data.get('id')
         updated_post = serializers.PostsSerializer(data=request.data)
@@ -83,7 +111,7 @@ class PostsViewset(viewsets.ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         if not request.data.get('content') or not request.data.get('user_id'):
-            raise ValidationError('Content or user is upsent')
+            raise ValidationError('Content or user is absent')
 
         post = serializers.PostsSerializer(data=request.data)
 
@@ -123,7 +151,7 @@ class CommentsViewset(viewsets.ModelViewSet):
 
     def put(self, request):
         if not request.data.get('content') or not request.data.get('user_id') or not request.data.get('post_id'):
-            raise ValidationError('content, user_id or post_id is upsent')
+            raise ValidationError('content, user_id or post_id is absent')
 
         comment_id = request.data.get('id')
         updated_comment = serializers.CommentsSerializer(data=request.data)
@@ -148,7 +176,7 @@ class CommentsViewset(viewsets.ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         if not request.data.get('content') or not request.data.get('user_id') or not request.data.get('post_id'):
-            raise ValidationError('content, user_id or post_id is upsent')
+            raise ValidationError('content, user_id or post_id is absent')
 
         comment = serializers.CommentsSerializer(data=request.data)
 
@@ -180,13 +208,18 @@ class LikesViewset(viewsets.ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         if not request.data.get('post_id') or not request.data.get('user_id'):
-            raise ValidationError('user_id or post_id is upsent')
+            raise ValidationError('user_id or post_id is absent')
 
+        post_id = request.data.get('post_id')
+        user_id = request.data.get('user_id')
         like = serializers.LikesSerializer(data=request.data)
+
+        if models.Likes.objects.filter(user_id=user_id).filter(post_id=post_id).count() != 0:
+            return Response(status=409, data='Like from this user already exist')
 
         if like.is_valid():
             like.save()
-            models.Posts.objects.filter(id=request.data.get('post_id')).update(likes_count=F('likes_count') + 1)
+            models.Posts.objects.filter(id=post_id).update(likes_count=F('likes_count') + 1)
             return Response(data=like.data, status=201)
         else:
             raise ValidationError('unable to parse body')
@@ -233,7 +266,7 @@ class UsersViewset(viewsets.ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         if not request.data.get('username') or not request.data.get('email') or not request.data.get('password'):
-            raise ValidationError('username, email or password is upsent')
+            raise ValidationError('username, email or password is absent')
 
         user = serializers.ProfileSerializer(data=request.data)
 
@@ -245,7 +278,7 @@ class UsersViewset(viewsets.ModelViewSet):
 
     def put(self, request):
         if not request.data.get('username') or not request.data.get('email') or not request.data.get('password'):
-            raise ValidationError('username, email or password is upsent')
+            raise ValidationError('username, email or password is absent')
 
         user_id = request.data.get('id')
         updated_user = serializers.ProfileSerializer(data=request.data)
