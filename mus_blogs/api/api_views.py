@@ -1,7 +1,6 @@
-from rest_framework import viewsets, permissions
+from rest_framework import viewsets, permissions, status
 from . import models
 from . import serializers
-from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
 from django.db.models import F
 
@@ -21,14 +20,14 @@ class FollowersViewset(viewsets.ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         if not request.data.get('user_id') or not request.data.get('follower_id'):
-            raise ValidationError('user_id or follower_id is absent')
+            return Response(status=status.HTTP_400_BAD_REQUEST, data='user_id or follower_id is absent')
 
         user_id = request.data.get('user_id')
         follower_id = request.data.get('follower_id')
         follower = serializers.FollowersSerializer(data=request.data)
 
         if models.Followers.objects.filter(user_id=user_id).filter(follower_id=follower_id).count() != 0:
-            return Response(status=409, data='Follower already exist')
+            return Response(status=status.HTTP_409_CONFLICT, data='Follower already exist')
 
         if follower.is_valid():
             follower.save()
@@ -37,9 +36,9 @@ class FollowersViewset(viewsets.ModelViewSet):
             models.Profile.objects.filter(id=follower_id).update(
                 subscriptions_count=F('subscriptions_count') + 1)
 
-            return Response(data=follower.data, status=201)
+            return Response(data=follower.data, status=status.HTTP_201_CREATED)
         else:
-            raise ValidationError('unable to parse body')
+            return Response(status=status.HTTP_400_BAD_REQUEST, data='unable to parse the body')
 
     def delete(self, request):
         qs = super().get_queryset()
@@ -47,14 +46,19 @@ class FollowersViewset(viewsets.ModelViewSet):
         follower_id = request.data.get('follower_id')
 
         if user_id and follower_id:
-            qs.filter(user_id=user_id).filter(follower_id=follower_id).delete()
+            qs_item = qs.filter(user_id=user_id).filter(follower_id=follower_id)
+
+            if qs_item.count() != 1:
+                return Response(status=status.HTTP_204_NO_CONTENT)
+
+            qs_item.delete()
             models.Profile.objects.filter(id=user_id).update(
                 followers_count=F('followers_count') - 1)
             models.Profile.objects.filter(id=follower_id).update(
                 subscriptions_count=F('subscriptions_count') - 1)
-            return Response(data='deleted successfully', status=200)
+            return Response(data='deleted successfully', status=status.HTTP_200_OK)
 
-        raise ValidationError('Invalid parameters')
+        return Response(status=status.HTTP_400_BAD_REQUEST, data='invalid parameters')
 
 
 class PostsViewset(viewsets.ModelViewSet):
@@ -86,7 +90,7 @@ class PostsViewset(viewsets.ModelViewSet):
 
     def put(self, request):
         if not request.data.get('content') or not request.data.get('user_id'):
-            raise ValidationError('Content or user is absent')
+            return Response(status=status.HTTP_400_BAD_REQUEST, data='content or user is absent')
 
         post_id = request.data.get('id')
         updated_post = serializers.PostsSerializer(data=request.data)
@@ -95,31 +99,36 @@ class PostsViewset(viewsets.ModelViewSet):
         if post_id:
             if updated_post.is_valid():
                 qs.filter(id=post_id).update(**updated_post.data)
-                return Response(data=updated_post.data, status=201)
+                return Response(data=updated_post.data, status=status.HTTP_201_CREATED)
 
-        raise ValidationError('Unable to parse data')
+        return Response(status=status.HTTP_400_BAD_REQUEST, data='unable to parse the body')
 
     def delete(self, request):
         qs = super().get_queryset()
         post_id = request.GET.get('id')
 
         if post_id:
-            qs.filter(id=post_id).delete()
-            return Response(status=200, data='deleted successfully')
+            qs_item = qs.filter(id=post_id)
 
-        raise ValidationError('invalid id value')
+            if qs_item.count() != 1:
+                return Response(status=status.HTTP_204_NO_CONTENT)
+
+            qs_item.delete()
+            return Response(status=status.HTTP_200_OK, data='deleted successfully')
+
+        return Response(status=status.HTTP_400_BAD_REQUEST, data='invalid id value')
 
     def create(self, request, *args, **kwargs):
         if not request.data.get('content') or not request.data.get('user_id'):
-            raise ValidationError('Content or user is absent')
+            return Response(status=status.HTTP_400_BAD_REQUEST, data='content or user is absent')
 
         post = serializers.PostsSerializer(data=request.data)
 
         if post.is_valid():
             post.save()
-            return Response(data=post.data, status=201)
+            return Response(data=post.data, status=status.HTTP_201_CREATED)
         else:
-            raise ValidationError('Unable to parse body')
+            return Response(status=status.HTTP_400_BAD_REQUEST, data='unable to parse the body')
 
 
 class CommentsViewset(viewsets.ModelViewSet):
@@ -151,7 +160,7 @@ class CommentsViewset(viewsets.ModelViewSet):
 
     def put(self, request):
         if not request.data.get('content') or not request.data.get('user_id') or not request.data.get('post_id'):
-            raise ValidationError('content, user_id or post_id is absent')
+            return Response(status=status.HTTP_400_BAD_REQUEST, data='content, user_id or post_id is absent')
 
         comment_id = request.data.get('id')
         updated_comment = serializers.CommentsSerializer(data=request.data)
@@ -160,9 +169,9 @@ class CommentsViewset(viewsets.ModelViewSet):
         if comment_id:
             if updated_comment.is_valid():
                 qs.filter(id=comment_id).update(**updated_comment.data)
-                return Response(data=updated_comment.data, status=201)
+                return Response(data=updated_comment.data, status=status.HTTP_201_CREATED)
 
-        raise ValidationError('Unable to parse data')
+        return Response(status=status.HTTP_400_BAD_REQUEST, data='unable to parse the body')
 
     def delete(self, request):
         qs = super().get_queryset()
@@ -170,21 +179,21 @@ class CommentsViewset(viewsets.ModelViewSet):
 
         if comment_id:
             qs.filter(id=comment_id).delete()
-            return Response(status=200, data='deleted successfully')
+            return Response(status=status.HTTP_200_OK, data='deleted successfully')
 
-        raise ValidationError('invalid id value')
+        return Response(status=status.HTTP_400_BAD_REQUEST, data='invalid id value')
 
     def create(self, request, *args, **kwargs):
         if not request.data.get('content') or not request.data.get('user_id') or not request.data.get('post_id'):
-            raise ValidationError('content, user_id or post_id is absent')
+            return Response(status=status.HTTP_400_BAD_REQUEST, data='content, user_id or post_id is absent')
 
         comment = serializers.CommentsSerializer(data=request.data)
 
         if comment.is_valid():
             comment.save()
-            return Response(data=comment.data, status=201)
+            return Response(data=comment.data, status=status.HTTP_201_CREATED)
         else:
-            raise ValidationError('unable to parse body')
+            return Response(status=status.HTTP_400_BAD_REQUEST, data='unable to parse the body')
 
 
 class LikesViewset(viewsets.ModelViewSet):
@@ -208,21 +217,21 @@ class LikesViewset(viewsets.ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         if not request.data.get('post_id') or not request.data.get('user_id'):
-            raise ValidationError('user_id or post_id is absent')
+            return Response(status=status.HTTP_400_BAD_REQUEST, data='user_id or post_id is absent')
 
         post_id = request.data.get('post_id')
         user_id = request.data.get('user_id')
         like = serializers.LikesSerializer(data=request.data)
 
         if models.Likes.objects.filter(user_id=user_id).filter(post_id=post_id).count() != 0:
-            return Response(status=409, data='Like from this user already exist')
+            return Response(status=status.HTTP_409_CONFLICT, data='Like from this user already exist')
 
         if like.is_valid():
             like.save()
             models.Posts.objects.filter(id=post_id).update(likes_count=F('likes_count') + 1)
-            return Response(data=like.data, status=201)
+            return Response(data=like.data, status=status.HTTP_201_CREATED)
         else:
-            raise ValidationError('unable to parse body')
+            return Response(status=status.HTTP_400_BAD_REQUEST, data='unable to parse the body')
 
     def delete(self, request):
         qs = super().get_queryset()
@@ -230,11 +239,16 @@ class LikesViewset(viewsets.ModelViewSet):
         user_id = request.GET.get('user_id')
 
         if post_id and user_id:
-            qs.filter(post_id=post_id).filter(user_id=user_id).delete()
-            models.Posts.objects.filter(id=request.data.get('post_id')).update(likes_count=F('likes_count') - 1)
-            return Response(status=200, data='deleted successfully')
+            qs_item = qs.filter(post_id=post_id).filter(user_id=user_id)
 
-        raise ValidationError('invalid id value')
+            if qs_item.count() != 1:
+                return Response(status=status.HTTP_204_NO_CONTENT)
+
+            qs_item.delete()
+            models.Posts.objects.filter(id=request.data.get('post_id')).update(likes_count=F('likes_count') - 1)
+            return Response(status=status.HTTP_200_OK, data='deleted successfully')
+
+        return Response(status=status.HTTP_400_BAD_REQUEST, data='invalid id value')
 
 
 class UsersViewset(viewsets.ModelViewSet):
@@ -266,19 +280,19 @@ class UsersViewset(viewsets.ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         if not request.data.get('username') or not request.data.get('email') or not request.data.get('password'):
-            raise ValidationError('username, email or password is absent')
+            return Response(status=status.HTTP_400_BAD_REQUEST, data='username, email or password is absent')
 
         user = serializers.ProfileSerializer(data=request.data)
 
         if user.is_valid():
             user.save()
-            return Response(data=user.data, status=201)
+            return Response(data=user.data, status=status.HTTP_201_CREATED)
         else:
-            raise ValidationError('unable to parse body')
+            return Response(status=status.HTTP_400_BAD_REQUEST, data='unable to parse the body')
 
     def put(self, request):
         if not request.data.get('username') or not request.data.get('email') or not request.data.get('password'):
-            raise ValidationError('username, email or password is absent')
+            return Response(status=status.HTTP_400_BAD_REQUEST, data='username, email or password is absent')
 
         user_id = request.data.get('id')
         updated_user = serializers.ProfileSerializer(data=request.data)
@@ -287,16 +301,50 @@ class UsersViewset(viewsets.ModelViewSet):
         if user_id:
             if updated_user.is_valid():
                 qs.filter(id=user_id).update(**updated_user.data)
-                return Response(data=updated_user.data, status=201)
+                return Response(data=updated_user.data, status=status.HTTP_201_CREATED)
 
-        raise ValidationError('Unable to parse data')
+        return Response(status=status.HTTP_400_BAD_REQUEST, data='unable to parse the body')
 
     def delete(self, request):
         qs = super().get_queryset()
         user_id = request.GET.get('id')
 
         if user_id:
-            qs.filter(id=user_id).delete()
-            return Response(status=200, data='deleted successfully')
+            qs_item = qs.filter(id=user_id)
 
-        raise ValidationError('invalid id value')
+            if qs_item.count() != 1:
+                return Response(status=status.HTTP_204_NO_CONTENT)
+
+            qs_item.delete()
+            return Response(status=status.HTTP_200_OK, data='deleted successfully')
+
+        return Response(status=status.HTTP_400_BAD_REQUEST, data='invalid id value')
+
+
+class NotificationsViewset(viewsets.ModelViewSet):
+    queryset = models.Notifications.objects.all()
+    serializer_class = serializers.NotificationsSerializer
+    http_method_names = ['get', 'delete']
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+
+        user_id = self.request.query_params.get('user_id')
+        if user_id:
+            return qs.filter(user_id=user_id)
+
+    def delete(self, request):
+        qs = super().get_queryset()
+        user_id = request.GET.get('user_id')
+
+        if user_id:
+            qs_items = qs.filter(user_id=user_id)
+
+            if qs_items.count() == 0:
+                return Response(status=status.HTTP_204_NO_CONTENT)
+
+            qs_items.delete()
+            return Response(status=status.HTTP_200_OK, data='deleted successfully')
+
+        return Response(status=status.HTTP_400_BAD_REQUEST, data='invalid id value')
