@@ -1,4 +1,4 @@
-from rest_framework import viewsets
+from rest_framework import viewsets, permissions
 from . import models
 from . import serializers
 from rest_framework.exceptions import ValidationError
@@ -10,6 +10,7 @@ class FollowersViewset(viewsets.ModelViewSet):
     queryset = models.Followers.objects.all()
     serializer_class = serializers.FollowersSerializer
     http_method_names = ['get', 'post', 'delete']
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     def get_queryset(self):
         qs = super().get_queryset()
@@ -32,6 +33,7 @@ class PostsViewset(viewsets.ModelViewSet):
     queryset = models.Posts.objects.all()
     serializer_class = serializers.PostsSerializer
     http_method_names = ['get', 'post', 'put', 'delete']
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     def get_queryset(self):
         qs = super().get_queryset()
@@ -96,6 +98,7 @@ class CommentsViewset(viewsets.ModelViewSet):
     queryset = models.Comments.objects.all()
     serializer_class = serializers.CommentsSerializer
     http_method_names = ['get', 'post', 'put', 'delete']
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     def get_queryset(self):
         qs = super().get_queryset()
@@ -160,6 +163,7 @@ class LikesViewset(viewsets.ModelViewSet):
     queryset = models.Likes.objects.all()
     serializer_class = serializers.LikesSerializer
     http_method_names = ['get', 'post', 'delete']
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     def get_queryset(self):
         qs = super().get_queryset()
@@ -204,6 +208,7 @@ class UsersViewset(viewsets.ModelViewSet):
     queryset = models.Profile.objects.all()
     serializer_class = serializers.ProfileSerializer
     http_method_names = ['get', 'post', 'put', 'delete']
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     def get_queryset(self):
         qs = super().get_queryset()
