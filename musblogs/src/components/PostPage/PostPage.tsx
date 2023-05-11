@@ -3,17 +3,11 @@ import "./PostPage.scss";
 import "../../styles/buttons.scss";
 import "../../styles/inputs.scss";
 import "../../styles/names.scss";
-import avatar from "../../images/user_toolkit/avatar.svg";
-import comment from "../../images/post/comment.svg";
-import other_info from "../../images/form_toolkit/other_info.svg";
-import repost from "../../images/post/repost.svg";
-import like from "../../images/post/like.svg";
-import { ImageDiv } from "../BasicComponents/ImageDiv/ImageDiv";
+import { postImages, userToolkit, formToolkit } from "../../images/images";
+import { ImageDiv, Button } from "../BasicComponents/BasicComponents";
 import { GoBackLine } from "../GoBackLine/GoBackLine";
 import { Comment } from "../Comment/Comment";
-import { PostProps } from "../../Types/DataBase";
-import { CommentProps } from "../../Types/DataBase";
-import { Button } from "../BasicComponents/Button/Button";
+import { PostProps, CommentProps } from "../../Types/DataBase";
 
 export const PostPage: React.FC = () => {
 
@@ -92,9 +86,9 @@ export const PostPage: React.FC = () => {
             <GoBackLine />
             <div className="post_page">
                 <div className="post_info">
-                    <ImageDiv class="settings" src={other_info} alt="settings" />
+                    <ImageDiv class="settings" src={formToolkit.other_info} alt="settings" />
                     <div className="user_info">
-                        <ImageDiv class="user_avatar" src={avatar} alt="avatar" />
+                        <ImageDiv class="user_avatar" src={userToolkit.avatar} alt="avatar" />
                         <div className="text_info">
                             <div className="post_header">{post.user.firstname} {post.user.lastname}</div>
                             <div className="login_name">{post.user.login}</div>
@@ -107,15 +101,15 @@ export const PostPage: React.FC = () => {
                     <hr></hr>
                     <div className="match_info">
                         <div className="block">
-                            <ImageDiv src={comment} alt="comment" />
+                            <ImageDiv src={postImages.comment} alt="comment" />
                             <div className="login_name number">{post.comments}</div>
                         </div>
                         <div className="block">
-                            <ImageDiv src={repost} alt="repost" />
+                            <ImageDiv src={postImages.repost} alt="repost" />
                             <div className="login_name number">{post.reposts}</div>
                         </div>
                         <div className="block">
-                            <ImageDiv src={like} alt="like" />
+                            <ImageDiv src={postImages.like} alt="like" />
                             <div className="login_name number">{post.likes}</div>
                         </div>
                     </div>

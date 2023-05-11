@@ -2,12 +2,8 @@ import React, { useState } from "react";
 import "./Registration.scss";
 import "../../styles/names.scss";
 import "../../styles/buttons.scss";
-import avatar from "../../images/user_toolkit/avatar.svg";
-import { ImageDiv } from "../BasicComponents/ImageDiv/ImageDiv";
-import { Input } from "../BasicComponents/Input/Input";
-import { Password } from "../BasicComponents/Password/Password";
-import { DateInput } from "../BasicComponents/DateInput/DateInput";
-import { Button } from "../BasicComponents/Button/Button";
+import { userToolkit } from "../../images/images";
+import { ImageDiv, Input, Password, DateInput, Button } from "../BasicComponents/BasicComponents";
 import { useNavigate } from "react-router-dom";
 
 export const Registration: React.FC = () => {
@@ -56,7 +52,7 @@ export const Registration: React.FC = () => {
                 Регистрация
             </div>
             <div className="not_needed">
-                <ImageDiv src={avatar} alt="avatar" class="avatar" />
+                <ImageDiv src={userToolkit.avatar} alt="avatar" class="avatar" />
                 <div className="change_form">
                     <div className="fl_name option">
                         <div><Input class="basic_input" type="text" placeholder="Имя" onChangeFunction={changeFirstName} /></div>

@@ -6,7 +6,7 @@ import "../../styles/names.scss";
 import { UserLine } from "../UserLine/UserLine";
 import { UserProps } from "../../Types/DataBase";
 import { GoBackLine } from "../GoBackLine/GoBackLine";
-import { Button } from "../BasicComponents/Button/Button";
+import { Button } from "../BasicComponents/BasicComponents";
 
 export const Subscriptions: React.FC = () => {
 

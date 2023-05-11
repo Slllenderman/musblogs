@@ -3,21 +3,12 @@ import "./UserPage.scss";
 import "../../styles/buttons.scss";
 import "../../styles/inputs.scss";
 import "../../styles/names.scss";
-import settings from "../../images/user_toolkit/settings.svg";
-import create_post from "../../images/user_toolkit/create_post.svg";
-import avatar from "../../images/user_toolkit/avatar.svg";
-import link from "../../images/user_toolkit/link.svg";
-import location from "../../images/user_toolkit/location.svg";
-import showing_button from "../../images/user_toolkit/showing_button.svg";
-import birthday from "../../images/user_toolkit/birthday.svg";
-import { useNavigate } from "react-router-dom";
-import { Button } from "../BasicComponents/Button/Button";
-import { ImageDiv } from "../BasicComponents/ImageDiv/ImageDiv";
-import { FullUserProps } from "../../Types/DataBase";
-import { PostProps } from "../../Types/DataBase";
-import { CommentProps } from "../../Types/DataBase";
+import { userToolkit } from "../../images/images";
+import { ImageDiv, Button } from "../BasicComponents/BasicComponents";
 import { Comment } from "../Comment/Comment";
 import { Post } from "../Post/Post";
+import { useNavigate } from "react-router-dom";
+import { FullUserProps, PostProps, CommentProps } from "../../Types/DataBase";
 
 export const UserPage: React.FC = () => {
 
@@ -241,8 +232,8 @@ export const UserPage: React.FC = () => {
                 <div className="user_header">
                     <div className="content">
                         <div className="left_content">
-                            <ImageDiv class="user_toolkit" src={settings} alt="settings" onClickFunction={goToSettings}/>
-                            <ImageDiv class="u_avatar" src={avatar} alt="avatar" />
+                            <ImageDiv class="user_toolkit" src={userToolkit.settings} alt="settings" onClickFunction={goToSettings}/>
+                            <ImageDiv class="u_avatar" src={userToolkit.avatar} alt="avatar" />
                             <div className="text_info">
                                 <div>
                                     <div className="black_header">{user.firstname} {user.lastname}</div>
@@ -255,7 +246,7 @@ export const UserPage: React.FC = () => {
                             </div>
                         </div>
                         <div className="right_content">
-                            <ImageDiv class="user_toolkit" src={create_post} alt="create_post" onClickFunction={goToCreatingPost} />
+                            <ImageDiv class="user_toolkit" src={userToolkit.create_post} alt="create_post" onClickFunction={goToCreatingPost} />
                         </div>
                     </div>
                 </div>
@@ -269,7 +260,7 @@ export const UserPage: React.FC = () => {
                                         День рождения
                                     </div>
                                     <div className="block">
-                                        <ImageDiv class="note" src={birthday} alt="birthday" />
+                                        <ImageDiv class="note" src={userToolkit.birthday} alt="birthday" />
                                         <div className="date">
                                             <div className="first dark_header">{GetDayOfDate(user.birthday)}</div>
                                             <div className="last dark_name">{GetMonthOfDate(user.birthday)}</div>
@@ -278,11 +269,11 @@ export const UserPage: React.FC = () => {
                                 </div>
                                 <div className="right_content">
                                     <div className="option">
-                                        <ImageDiv class="option_img" src={link} alt="link" />
+                                        <ImageDiv class="option_img" src={userToolkit.link} alt="link" />
                                         <a href={user.link} className="link_name">{user.link}</a>
                                     </div>
                                     <div className="option">
-                                        <ImageDiv class="option_img" src={location} alt="location" />
+                                        <ImageDiv class="option_img" src={userToolkit.location} alt="location" />
                                         <div className="link_name">{user.location}</div>
                                     </div>
                                     <div className="desc">{user.description}</div>
@@ -291,7 +282,7 @@ export const UserPage: React.FC = () => {
                                 <div className="space">
                                 </div>
                                 <div className="showing_button">
-                                    <ImageDiv class="img_div" src={showing_button} alt="shw_button" onClickFunction={changeShowing} />
+                                    <ImageDiv class="img_div" src={userToolkit.showing_button} alt="shw_button" onClickFunction={changeShowing} />
                                 </div>
                             </div>
                             <hr></hr>

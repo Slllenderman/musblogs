@@ -4,11 +4,8 @@ import "../../styles/names.scss";
 import "../../styles/inputs.scss";
 import "../../styles/buttons.scss";
 import "../../styles/hrefs.scss";
-import welcome from "../../images/guest_page/welcome.svg";
-import { ImageDiv } from "../BasicComponents/ImageDiv/ImageDiv";
-import { Input } from "../BasicComponents/Input/Input";
-import { Button } from "../BasicComponents/Button/Button";
-import { Href } from "../BasicComponents/Href/Href";
+import { guestPage } from "../../images/images";
+import { ImageDiv, Input, Button, Href } from "../BasicComponents/BasicComponents";
 import { useNavigate } from "react-router-dom";
 
 export const Login: React.FC = () => {
@@ -25,7 +22,7 @@ export const Login: React.FC = () => {
 
     return (
         <div className="login">
-            <ImageDiv class="card" src={welcome} alt="welcome" />
+            <ImageDiv class="card" src={guestPage.guest_page} alt="welcome" />
             <div className="card login_form">
                 <div className="form_header">
                 </div>

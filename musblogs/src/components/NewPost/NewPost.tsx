@@ -4,7 +4,7 @@ import "../../styles/buttons.scss";
 import "../../styles/inputs.scss";
 import "../../styles/names.scss";
 import { GoBackLine } from "../GoBackLine/GoBackLine";
-import { Button } from "../BasicComponents/Button/Button";
+import { Button } from "../BasicComponents/BasicComponents";
 
 export const NewPost: React.FC = () => {
     return (
