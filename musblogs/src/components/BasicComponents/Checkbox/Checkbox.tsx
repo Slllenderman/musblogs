@@ -2,7 +2,6 @@ import React from "react";
 import "./Checkbox.scss";
 import "../../../styles/inputs.scss";
 import { CheckboxProps } from "../../../Types/BasicElements";
-import { ImageDiv } from "../ImageDiv/ImageDiv";
 import check from "../../../images/form_toolkit/check.svg";
 
 export const Checkbox: React.FC<CheckboxProps> = ({...props}) => {

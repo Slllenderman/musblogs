@@ -138,7 +138,7 @@ export const PostPage: React.FC = () => {
                             <Button text=">" class="bottom_button create_comment_button" />
                         </div>
                     </div>
-                : <div></div>}
+                : <div className="add_comment"></div>}
             </div>
         </div>
     )

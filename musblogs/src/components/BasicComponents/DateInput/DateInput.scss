@@ -2,11 +2,12 @@
     display: inline;
     float: left;
     background-color: white;
+    padding: 0.4rem;
 
     .content {
         display: flex;
         flex: 1;
-        justify-content: space-between;
+        justify-content: start;
         align-items: center;
         align-content: center;
 
@@ -38,7 +39,6 @@
         }
     
         div img {
-            margin-left: 0.5em;
             height: 1em;
         }
     }

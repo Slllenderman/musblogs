@@ -14,6 +14,10 @@
         position: absolute;
         right: 2em;
         top: 1em;
+
+        img {
+            width: 2em;
+        }
     }
 
     .user_info {
@@ -21,11 +25,11 @@
         flex: 1;
         align-items: center;
         align-content: center;
-        justify-content: space-between;
+        justify-content: start;
         margin-bottom: 1vh;
 
         .user_avatar {
-            width: 15%;
+            width: 12%;
 
             img {
                 width: 100%;
@@ -33,7 +37,7 @@
         }
 
         .text_info {
-            width: 82%;
+            margin-left: 1em;
 
             .date {
                 margin-top: 1em;
@@ -53,6 +57,10 @@
 
         .block {
             display: flex;
+
+            div img {
+                height: 1.5em;
+            }
 
             .number {
                 margin-left: 0.5em;
