@@ -285,10 +285,13 @@ class UsersViewset(viewsets.ModelViewSet):
         user = serializers.ProfileSerializer(data=request.data)
 
         if user.is_valid():
+            if models.Profile.objects.filter(email=request.data.get('email')).count != 0:
+                return Response(status=status.HTTP_409_CONFLICT, data='user with this email already exist')
+
             user.save()
             return Response(data=user.data, status=status.HTTP_201_CREATED)
         else:
-            return Response(status=status.HTTP_400_BAD_REQUEST, data='unable to parse the body')
+            return Response(status=status.HTTP_409_CONFLICT, data='user with this username already exists')
 
     def put(self, request):
         if not request.data.get('username') or not request.data.get('email') or not request.data.get('password'):
