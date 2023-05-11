@@ -2,6 +2,12 @@ from rest_framework import serializers
 from . import models
 
 
+class ProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Profile
+        fields = '__all__'
+
+
 class FollowersSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Followers
@@ -12,7 +18,6 @@ class PostsSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Posts
         fields = '__all__'
-
 
 
 class LikesSerializer(serializers.ModelSerializer):

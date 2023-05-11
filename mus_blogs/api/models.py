@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.hashers import make_password
 
 
 class Profile(AbstractUser):
@@ -8,8 +9,12 @@ class Profile(AbstractUser):
     birthday = models.DateField(blank=True, null=True)
     description = models.CharField(max_length=255, blank=True, null=True)
     address = models.CharField(max_length=255, blank=True, null=True)
-    avatar = models.ImageField(upload_to='uploads/')
+    avatar = models.ImageField(upload_to='uploads/', blank=True, null=True)
     head = models.CharField(max_length=255, blank=True, null=True)
+
+    def save(self, *args, **kwargs):
+        self.password = make_password(self.password)
+        super().save(*args, **kwargs)
 
 
 class Followers(models.Model):
