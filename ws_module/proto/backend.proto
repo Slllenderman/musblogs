@@ -11,14 +11,17 @@ service WsProto{
 message Post {
     int32 post_id = 1;
     string post_content = 2;
-    //etc...
+    string date = 3;
+    string content = 4;
+    int32 likes = 5;
+    string username = 6;
 }
 
 message Users {
     repeated string username = 1;
 }
 
-message NewPostAction{
+message NewPostAction {
     Users users = 1;
     Post post = 2;
 }

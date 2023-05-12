@@ -13,7 +13,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\rbackend.proto\"-\n\x04Post\x12\x0f\n\x07post_id\x18\x01 \x01(\x05\x12\x14\n\x0cpost_content\x18\x02 \x01(\t\"\x19\n\x05Users\x12\x10\n\x08username\x18\x01 \x03(\t\";\n\rNewPostAction\x12\x15\n\x05users\x18\x01 \x01(\x0b\x32\x06.Users\x12\x13\n\x04post\x18\x02 \x01(\x0b\x32\x05.Post\"*\n\x08PostLike\x12\x0f\n\x07post_id\x18\x01 \x01(\x05\x12\r\n\x05likes\x18\x02 \x01(\x05\"\x06\n\x04NULL2\x9c\x01\n\x07WsProto\x12&\n\x0c\x61\x64\x64PostEvent\x12\x0e.NewPostAction\x1a\x06.Users\x12\x1f\n\x0f\x64\x65letePostEvent\x12\x05.Post\x1a\x05.NULL\x12\x1f\n\x0f\x63hangePostEvent\x12\x05.Post\x1a\x05.NULL\x12\'\n\x13\x63hangePostLikeEvent\x12\t.PostLike\x1a\x05.NULLb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\rbackend.proto\"m\n\x04Post\x12\x0f\n\x07post_id\x18\x01 \x01(\x05\x12\x14\n\x0cpost_content\x18\x02 \x01(\t\x12\x0c\n\x04\x64\x61te\x18\x03 \x01(\t\x12\x0f\n\x07\x63ontent\x18\x04 \x01(\t\x12\r\n\x05likes\x18\x05 \x01(\x05\x12\x10\n\x08username\x18\x06 \x01(\t\"\x19\n\x05Users\x12\x10\n\x08username\x18\x01 \x03(\t\";\n\rNewPostAction\x12\x15\n\x05users\x18\x01 \x01(\x0b\x32\x06.Users\x12\x13\n\x04post\x18\x02 \x01(\x0b\x32\x05.Post\"*\n\x08PostLike\x12\x0f\n\x07post_id\x18\x01 \x01(\x05\x12\r\n\x05likes\x18\x02 \x01(\x05\"\x06\n\x04NULL2\x9c\x01\n\x07WsProto\x12&\n\x0c\x61\x64\x64PostEvent\x12\x0e.NewPostAction\x1a\x06.Users\x12\x1f\n\x0f\x64\x65letePostEvent\x12\x05.Post\x1a\x05.NULL\x12\x1f\n\x0f\x63hangePostEvent\x12\x05.Post\x1a\x05.NULL\x12\'\n\x13\x63hangePostLikeEvent\x12\t.PostLike\x1a\x05.NULLb\x06proto3')
 
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, globals())
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'backend_pb2', globals())
@@ -21,15 +21,15 @@ if _descriptor._USE_C_DESCRIPTORS == False:
 
   DESCRIPTOR._options = None
   _POST._serialized_start=17
-  _POST._serialized_end=62
-  _USERS._serialized_start=64
-  _USERS._serialized_end=89
-  _NEWPOSTACTION._serialized_start=91
-  _NEWPOSTACTION._serialized_end=150
-  _POSTLIKE._serialized_start=152
-  _POSTLIKE._serialized_end=194
-  _NULL._serialized_start=196
-  _NULL._serialized_end=202
-  _WSPROTO._serialized_start=205
-  _WSPROTO._serialized_end=361
+  _POST._serialized_end=126
+  _USERS._serialized_start=128
+  _USERS._serialized_end=153
+  _NEWPOSTACTION._serialized_start=155
+  _NEWPOSTACTION._serialized_end=214
+  _POSTLIKE._serialized_start=216
+  _POSTLIKE._serialized_end=258
+  _NULL._serialized_start=260
+  _NULL._serialized_end=266
+  _WSPROTO._serialized_start=269
+  _WSPROTO._serialized_end=425
 # @@protoc_insertion_point(module_scope)

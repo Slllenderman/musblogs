@@ -18,12 +18,20 @@ class NewPostAction(_message.Message):
     def __init__(self, users: _Optional[_Union[Users, _Mapping]] = ..., post: _Optional[_Union[Post, _Mapping]] = ...) -> None: ...
 
 class Post(_message.Message):
-    __slots__ = ["post_content", "post_id"]
+    __slots__ = ["content", "date", "likes", "post_content", "post_id", "username"]
+    CONTENT_FIELD_NUMBER: _ClassVar[int]
+    DATE_FIELD_NUMBER: _ClassVar[int]
+    LIKES_FIELD_NUMBER: _ClassVar[int]
     POST_CONTENT_FIELD_NUMBER: _ClassVar[int]
     POST_ID_FIELD_NUMBER: _ClassVar[int]
+    USERNAME_FIELD_NUMBER: _ClassVar[int]
+    content: str
+    date: str
+    likes: int
     post_content: str
     post_id: int
-    def __init__(self, post_id: _Optional[int] = ..., post_content: _Optional[str] = ...) -> None: ...
+    username: str
+    def __init__(self, post_id: _Optional[int] = ..., post_content: _Optional[str] = ..., date: _Optional[str] = ..., content: _Optional[str] = ..., likes: _Optional[int] = ..., username: _Optional[str] = ...) -> None: ...
 
 class PostLike(_message.Message):
     __slots__ = ["likes", "post_id"]
