@@ -1,18 +1,27 @@
 import React from "react";
+import { StringMappingType } from "typescript";
 
 export type FullUserProps = {
     id: number,
-    firstname: string,
-    lastname: string,
-    login: string,
+    password: string,
+    last_login: string,
+    is_superuser: boolean,
+    username: string,
+    first_name: string,
+    last_name: string,
+    email: string,
+    is_staff: boolean,
+    is_active: boolean,
+    date_joined: string,
+    followers_count: number,
+    subscriptions_count: number,
     birthday: string,
-    link: string,
-    location: string,
     description: string,
-    registration: string,
+    address: string,
     avatar: string,
-    subscriptions: number,
-    subscribes: number
+    head: string,
+    groups: Array<number>,
+    user_permissions: Array<number>
 }
 
 export type UserProps = {
@@ -42,6 +51,5 @@ export type PostProps = {
 }
 
 export type TokenProps = {
-    access: string,
-    refresh: string,
+    auth_token: string
 }

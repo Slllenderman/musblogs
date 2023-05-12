@@ -6,18 +6,26 @@ const user_desc = "Описание пользователя, не занима�
 const postText = "Текст поста, который был опубликован либо этим пользователем, либо репостнут на его страницу. Пост должен занимать не более 1500 символов? Скорее всего это значение должно быть меньше. Текст поста, который был опубликован либо этим пользователем, либо репостнут на его страницу."
 
 export const infUser: FullUserProps = {
-    id: 1,
-    firstname: "FirstName", 
-    lastname: "LastName",
-    login: "nickname",
-    birthday: "24.07.2001",
-    link: "https://telegram.com",
-    location: "city",
-    description: user_desc,
-    registration: "01.01.2023",
+    id: 0,
+    password: "",
+    last_login: "",
+    is_superuser: false,
+    username: "",
+    first_name: "",
+    last_name: "",
+    email: "",
+    is_staff: false,
+    is_active: false,
+    date_joined: "",
+    followers_count: 0,
+    subscriptions_count: 0,
+    birthday: "24.07.2000",
+    description: "",
+    address: "",
     avatar: "",
-    subscriptions: 100,
-    subscribes: 100,
+    head: "",
+    groups: [],
+    user_permissions: []
 }
 
 export const infPost: PostProps = {

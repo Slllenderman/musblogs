@@ -15,8 +15,7 @@ interface UserInfoState {
 const initialState: UserInfoState = {
     user: infUser,
     token: {
-        access: "",
-        refresh: ""
+        auth_token: ""
     },
     posts: infPosts,
     comments: infComments,

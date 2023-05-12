@@ -2,9 +2,11 @@ import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 import { configureStore, combineReducers } from '@reduxjs/toolkit';
 
 import userInfoReducer from "./reducers/userInfoSlice";
+import postFeedSlice from "./reducers/postFeedSlice";
 
 const rootReducer = combineReducers({
-    userInfoReducer
+    userInfoReducer,
+    postFeedSlice
 })
 
 export const setupStore = () => {

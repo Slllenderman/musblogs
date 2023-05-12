@@ -43,23 +43,28 @@ export const getOtherUserInfo = (props: {login: string}) => async (dispatch: App
     })
 }
 
-export const login = (loginProps: {login: string, password: string}) => async (dispatch: AppDispatch) => {
+export const login = (loginProps: {username: string, password: string}) => async (dispatch: AppDispatch) => {
     const cookies = new Cookies()
     dispatch(userInfoSlice.actions.userInfoFetching())
-    axios.post('', {...loginProps}) //add token
+    axios.post('/auth/token/login/', {...loginProps}) //add token
     .then((response) => {
-        axios.get('') // get full user info 
+        console.log(response)
+        axios.get('/api/v1/users/?username=' + loginProps.username, {headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'token ' + response.data.auth_token,
+        }}) // get full user info 
         .then((userResponse) => {
-            cookies.set('access-token', response.data.access, { path: '/' })
-            cookies.set('refresh-token', response.data.refresh, { path: '/' })
-            cookies.set('login', response.data.login, { path: '/' })
+            console.log(userResponse)
+            cookies.set('auth_token', response.data.auth_token, { path: '/' })
+            cookies.set('username', loginProps.username, { path: '/' })
             dispatch(userInfoSlice.actions.userInfoFetchingUser(userResponse.data[0]))
-            getOtherUserInfo({login: loginProps.login})
+            //getOtherUserInfo({login: loginProps.login})
         })
         dispatch(userInfoSlice.actions.userInfoFetchingToken(response.data))
         dispatch(userInfoSlice.actions.userInfoFetchingSuccess())
     })
     .catch((error: any) => {
+        console.log(error.message)
         dispatch(userInfoSlice.actions.userInfoFetchingError(error.message))
     })
 }

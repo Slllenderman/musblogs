@@ -7,28 +7,34 @@ import { userToolkit } from "../../images/images";
 import { ImageDiv, Button } from "../BasicComponents/BasicComponents";
 import { Comment } from "../Comment/Comment";
 import { Post } from "../Post/Post";
-import { infUser, infPosts, infComments } from "../../store/infinity";
-import { FullUserProps, PostProps, CommentProps } from "../../Types/DataBase";
+import { infPosts, infComments } from "../../store/infinity";
+import { PostProps, CommentProps } from "../../Types/DataBase";
 import { useNavigate } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "../../store";
 
 export const UserPage: React.FC = () => {
     const navigate = useNavigate();
+    const dispatch = useAppDispatch();
+    const {token, user} = useAppSelector((state) => state.userInfoReducer)
 
     const [showing, setShowing] = useState(true);
-    const [user, setUser] = useState<FullUserProps>(infUser);
     const [options, setOptions] = useState([true, false, false]);
     const [posts, setPosts] = useState<Array<PostProps>>([]);
     const [likePosts, setLikePosts] = useState<Array<PostProps>>([]);
     const [comments, setComments] = useState<Array<CommentProps>>([]);
 
     const GetDayOfDate = (date: string) => {
-        return date.split('.')[0]
+        return date.split('-')[2]
     }
 
     const GetMonthOfDate = (date: string) => {
         const months = ['январь', 'февраль', 'март', 'апрель', 'май', 'июнь', 'июль', 'август', 'сентябрь', 'октябрь', 'ноябрь', 'декабрь']
-        const intValue = parseInt(date.split('.')[1])
+        const intValue = parseInt(date.split('-')[1])
         return months[intValue - 1]
+    }
+
+    const GetYearOfDate = (date: string) => {
+        return date.split('-')[0]
     }
 
     useEffect(() => {
@@ -83,12 +89,12 @@ export const UserPage: React.FC = () => {
                             <ImageDiv class="u_avatar" src={userToolkit.avatar} alt="avatar" />
                             <div className="text_info">
                                 <div>
-                                    <div className="black_header">{user.firstname} {user.lastname}</div>
-                                    <div className="user_page_name">{user.login}</div>
+                                    <div className="black_header">{user.first_name} {user.last_name}</div>
+                                    <div className="user_page_name">{user.username}</div>
                                 </div>
                                 <div className="subs">
-                                    <div className="user_page_name" onClick={goToSubscriptions}>{user.subscriptions} подписок</div>
-                                    <div className="user_page_name" onClick={goToSubscribers} >{user.subscribes} подписчиков</div>
+                                    <div className="user_page_name" onClick={goToSubscriptions}>{user.subscriptions_count} подписок</div>
+                                    <div className="user_page_name" onClick={goToSubscribers} >{user.followers_count} подписчиков</div>
                                 </div>
                             </div>
                         </div>
@@ -117,14 +123,14 @@ export const UserPage: React.FC = () => {
                                 <div className="right_content">
                                     <div className="option">
                                         <ImageDiv class="option_img" src={userToolkit.link} alt="link" />
-                                        <a href={user.link} className="link_name">{user.link}</a>
+                                        <a href={user.email} className="link_name">{user.email}</a>
                                     </div>
                                     <div className="option">
                                         <ImageDiv class="option_img" src={userToolkit.location} alt="location" />
-                                        <div className="link_name">{user.location}</div>
+                                        <div className="link_name">{user.address}</div>
                                     </div>
                                     <div className="desc">{user.description}</div>
-                                    <div className="login_name">Регитсрация: {user.registration}</div>
+                                    <div className="login_name">Регитсрация: {GetMonthOfDate(user.date_joined)} {GetYearOfDate(user.date_joined)} г.</div>
                                 </div>
                                 <div className="space">
                                 </div>
@@ -150,19 +156,19 @@ export const UserPage: React.FC = () => {
                         {options[0] ?
                             posts.map((post: PostProps, index: number) => {
                                 return (
-                                    <Post {...post} />
+                                    <Post {...post} key={index} />
                                 )
                             })
                         : options[2] ?
                             likePosts.map((post: PostProps, index: number) => {
                                 return (
-                                    <Post {...post} />
+                                    <Post {...post} key={index} />
                                 )
                             })  
                         : options[1] ?
                             comments.map((comment: CommentProps, index: number) => {
                                 return (
-                                    <Comment {...comment} />
+                                    <Comment {...comment} key={index} />
                                 )
                             })
                         : <div></div>}

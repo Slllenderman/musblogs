@@ -24,6 +24,9 @@ export const postFeedSlice = createSlice({
             state.isLoading = true;
             state.error = "";
         },
+        postFeedFetchingPosts(state, action: PayloadAction<Array<PostProps>>) {
+            state.postFeed = [...action.payload]
+        },
         postFeedFetchingSearch(state, action: PayloadAction<string>) {
             state.search = action.payload
         },
@@ -31,10 +34,21 @@ export const postFeedSlice = createSlice({
             state.isLoading = false;
             state.error = "";
         },
+        postFeedDeletePost(state, action: PayloadAction<number>) {
+            let index = state.postFeed.findIndex((element) => element.id === action.payload)
+            if (index != -1) {
+                let newPostFeed = [...state.postFeed.slice(0, index), ...state.postFeed.slice(index + 1)]
+                state.postFeed = [...newPostFeed]
+            }
+        },
         postFeedFetchingError(state, action: PayloadAction<string>) {
             state.isLoading = false;
             state.error = action.payload;
         },
     }
 })
+
+export const { postFeedFetchingSearch, postFeedDeletePost } = postFeedSlice.actions;
+
+export default postFeedSlice.reducer;
 

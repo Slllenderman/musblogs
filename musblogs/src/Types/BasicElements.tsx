@@ -23,6 +23,7 @@ export type InputProps = {
     class?: string,
     type: string,
     placeholder?: string,
+    text?: string,
     onChangeFunction?: (params: any) => any;
 }
 
