@@ -255,7 +255,7 @@ class UsersViewset(viewsets.ModelViewSet):
     queryset = models.Profile.objects.all()
     serializer_class = serializers.ProfileSerializer
     http_method_names = ['get', 'post', 'put', 'delete']
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    # permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     def get_queryset(self):
         qs = super().get_queryset()
@@ -285,7 +285,7 @@ class UsersViewset(viewsets.ModelViewSet):
         user = serializers.ProfileSerializer(data=request.data)
 
         if user.is_valid():
-            if models.Profile.objects.filter(email=request.data.get('email')).count != 0:
+            if models.Profile.objects.filter(email=request.data.get('email')).count() != 0:
                 return Response(status=status.HTTP_409_CONFLICT, data='user with this email already exist')
 
             user.save()
