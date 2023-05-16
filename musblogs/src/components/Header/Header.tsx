@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import "./Header.scss";
 import "../../styles/inputs.scss";
 import search_feed from "../../images/header/search_feed.svg";
@@ -9,7 +9,6 @@ import logout from "../../images/header/logout.svg";
 
 import { ImageDiv } from "../BasicComponents/ImageDiv/ImageDiv";
 import { Input } from "../BasicComponents/Input/Input";
-
 export const Header: React.FC = () => {
     return (
         <header>

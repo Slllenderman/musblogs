@@ -5,8 +5,11 @@ import App from './App';
 
 import { Provider } from 'react-redux'
 import { setupStore } from './store';
+import { ws_connect } from './ws_module'
 
 const store = setupStore();
+
+ws_connect(store)
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
