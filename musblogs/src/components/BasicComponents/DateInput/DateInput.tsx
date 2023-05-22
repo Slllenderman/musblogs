@@ -4,8 +4,9 @@ import "../../../styles/inputs.scss";
 import calendar from "../../../images/form_toolkit/calendar.svg";
 import { ImageDiv } from "../ImageDiv/ImageDiv";
 import { Input } from "../Input/Input";
+import { DateInputProps } from "../../../Types/BasicElements";
 
-export const DateInput: React.FC = () => {
+export const DateInput: React.FC<DateInputProps> = ({...props}) => {
 
     const [date, setDate] = useState(Date());
 
@@ -28,7 +29,7 @@ export const DateInput: React.FC = () => {
             <div className="content">
                 <ImageDiv src={calendar} class="date_img" alt="calendar" />
                 <div className="date_input">
-                    <Input type="text" placeholder="дд.мм.гггг" />
+                    <Input type="text" text={props.text} placeholder="дд.мм.гггг" onChangeFunction={props.onChangeFunction} />
                 </div>
             </div>
         </div>

@@ -4,12 +4,12 @@ import "../../styles/buttons.scss";
 import "../../styles/inputs.scss";
 import "../../styles/names.scss";
 import { Post } from "../Post/Post";
-import { PostProps } from "../../Types/DataBase";
+import { FullPostProps } from "../../Types/DataBase";
 import { infPosts } from "../../store/infinity";
 
 export const MainPage: React.FC = () => {
 
-    const [posts, setPosts] = useState<Array<PostProps>>([]);
+    const [posts, setPosts] = useState<Array<FullPostProps>>([]);
 
     useEffect(() => {
         setPosts([...infPosts])
@@ -23,7 +23,7 @@ export const MainPage: React.FC = () => {
                     Ваша лента
                 </div>
                 <div className="posts">
-                    {posts.map((post: PostProps, index: number) => {
+                    {posts.map((post: FullPostProps, index: number) => {
                         return (
                             <Post {...post} />
                         )

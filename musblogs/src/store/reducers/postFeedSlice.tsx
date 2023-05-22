@@ -1,9 +1,9 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { PostProps, CommentProps } from "../../Types/DataBase";
+import { FullPostProps, CommentProps } from "../../Types/DataBase";
 import { infPosts } from "../infinity";
 
 interface postFeedState {
-    postFeed: Array<PostProps>,
+    postFeed: Array<FullPostProps>,
     isLoading: boolean,
     error: string,
     search: string
@@ -24,7 +24,7 @@ export const postFeedSlice = createSlice({
             state.isLoading = true;
             state.error = "";
         },
-        postFeedFetchingPosts(state, action: PayloadAction<Array<PostProps>>) {
+        postFeedFetchingPosts(state, action: PayloadAction<Array<FullPostProps>>) {
             state.postFeed = [...action.payload]
         },
         postFeedFetchingSearch(state, action: PayloadAction<string>) {

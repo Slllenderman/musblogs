@@ -6,16 +6,19 @@ import { ImageDiv, Input } from "../BasicComponents/BasicComponents";
 import { useNavigate } from "react-router-dom";
 import { useAppSelector, useAppDispatch } from "../../store";
 import { postFeedFetchingSearch } from "../../store/reducers/postFeedSlice";
+import { userInfoLogout } from "../../store/reducers/userInfoSlice";
+import Cookies from 'universal-cookie';
 
 export const Header: React.FC = () => {
 
     const dispatch = useAppDispatch()
+    const cookies = new Cookies()
     const [ editSearch, setEditSearh ] = useState("");
     const { token, user } = useAppSelector((state) => state.userInfoReducer)
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (token.auth_token == "")
+        if (!cookies.get("auth_token"))
             navigate("/login")
     }, [])
 
@@ -42,6 +45,9 @@ export const Header: React.FC = () => {
 
     const goToLogin = (e: any) => {
         navigate("/login")
+        cookies.set('auth_token', '', { path: '/' });
+        cookies.set('username', '', { path: '/' });
+        dispatch(userInfoLogout())
     }
 
     return (

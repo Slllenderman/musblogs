@@ -13,6 +13,10 @@ export type ButtonProps = {
     onClickFunction?: (params: any) => any;
 }
 
+export type GoBackLineProps = {
+    onClickFunction?: (params: any) => any;
+}
+
 export type HrefProps = {
     class?: string,
     text?: string,
@@ -23,6 +27,11 @@ export type InputProps = {
     class?: string,
     type: string,
     placeholder?: string,
+    text?: string,
+    onChangeFunction?: (params: any) => any;
+}
+
+export type DateInputProps = {
     text?: string,
     onChangeFunction?: (params: any) => any;
 }

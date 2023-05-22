@@ -11,10 +11,10 @@ export const UserLine: React.FC<UserProps> = ({...user}) => {
             <ImageDiv src={userToolkit.avatar} alt="avatar" class="user_avatar" />
             <div>
                 <div className="black_header">
-                    {user.firstname} {user.lastname}
+                    {user.first_name} {user.last_name}
                 </div>
                 <div className="login_name">
-                    {user.login}
+                    {user.username}
                 </div>
             </div>
         </div>

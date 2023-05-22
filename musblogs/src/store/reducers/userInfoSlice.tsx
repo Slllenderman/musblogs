@@ -1,13 +1,13 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { UserProps, PostProps, CommentProps, FullUserProps, TokenProps } from "../../Types/DataBase";
+import { UserProps, FullPostProps, FullCommentProps, FullUserProps, TokenProps } from "../../Types/DataBase";
 import { infUser, infPosts, infComments } from "../infinity";
 
 interface UserInfoState {
     user: FullUserProps,
     token: TokenProps,
-    posts: Array<PostProps>,
-    comments: Array<CommentProps>,
-    likes: Array<PostProps>,
+    posts: Array<FullPostProps>,
+    comments: Array<FullCommentProps>,
+    likes: Array<FullPostProps>,
     isLoading: boolean,
     error: string
 }
@@ -36,15 +36,15 @@ export const userInfoSlice = createSlice({
             state.user = {...action.payload}            
         },
         userInfoFetchingToken(state, action: PayloadAction<TokenProps>) {
-            state.token = {...action.payload}            
+            state.token.auth_token = action.payload.auth_token           
         },
-        userInfoFetchingPosts(state, action: PayloadAction<Array<PostProps>>) {
+        userInfoFetchingPosts(state, action: PayloadAction<Array<FullPostProps>>) {
             state.posts = {...action.payload}            
         },
-        userInfoFetchingComments(state, action: PayloadAction<Array<CommentProps>>) {
+        userInfoFetchingComments(state, action: PayloadAction<Array<FullCommentProps>>) {
             state.comments = {...action.payload}            
         },
-        userInfoFetchingLikes(state, action: PayloadAction<Array<PostProps>>) {
+        userInfoFetchingLikes(state, action: PayloadAction<Array<FullPostProps>>) {
             state.likes = {...action.payload}            
         },
         userInfoFetchingSuccess(state) {
@@ -56,9 +56,17 @@ export const userInfoSlice = createSlice({
             state.error = action.payload
         },
         userInfoLogout(state) {
-            state = {...initialState}
+            state.user = {...infUser}
+            state.token.auth_token = ""
+            state.posts = {...infPosts}
+            state.comments = {...infComments}
+            state.likes = {...infPosts}
+            state.error = ""
+            state.isLoading = false
         }
     }
 })
+
+export const {userInfoLogout, userInfoFetchingToken} = userInfoSlice.actions;
 
 export default userInfoSlice.reducer;

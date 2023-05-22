@@ -7,76 +7,35 @@ import { userToolkit } from "../../images/images";
 import { ImageDiv, Button } from "../BasicComponents/BasicComponents";
 import { Comment } from "../Comment/Comment";
 import { Post } from "../Post/Post";
-import { infPosts, infComments } from "../../store/infinity";
-import { PostProps, CommentProps } from "../../Types/DataBase";
+import { FullPostProps, FullCommentProps } from "../../Types/DataBase";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../store";
+import { GetDayOfDate, GetMonthOfDate, GetYearOfDate, ValidateNumber } from "../../validate/Validate";
+import Cookies from 'universal-cookie';
 
 export const UserPage: React.FC = () => {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
+    const cookies = new Cookies()
     const {token, user} = useAppSelector((state) => state.userInfoReducer)
 
     const [showing, setShowing] = useState(true);
     const [options, setOptions] = useState([true, false, false]);
-    const [posts, setPosts] = useState<Array<PostProps>>([]);
-    const [likePosts, setLikePosts] = useState<Array<PostProps>>([]);
-    const [comments, setComments] = useState<Array<CommentProps>>([]);
-
-    const GetDayOfDate = (date: string) => {
-        return date.split('-')[2]
-    }
-
-    const GetMonthOfDate = (date: string) => {
-        const months = ['январь', 'февраль', 'март', 'апрель', 'май', 'июнь', 'июль', 'август', 'сентябрь', 'октябрь', 'ноябрь', 'декабрь']
-        const intValue = parseInt(date.split('-')[1])
-        return months[intValue - 1]
-    }
-
-    const GetYearOfDate = (date: string) => {
-        return date.split('-')[0]
-    }
+    const [posts, setPosts] = useState<Array<FullPostProps>>([]);
+    const [likePosts, setLikePosts] = useState<Array<FullPostProps>>([]);
+    const [comments, setComments] = useState<Array<FullCommentProps>>([]);
 
     useEffect(() => {
-        setPosts([...infPosts])
-        setLikePosts([...infPosts])
-        setComments([...infComments])
-    }, [])
+        if (!cookies.get("auth_token"))
+            navigate("/login");
+    }, [user, token])
 
-    useEffect(() => {
-
-    }, [])
-
-    const changeShowing = (e: any) => {
-        setShowing(!showing);
-    }
-
-    const changeOptionOne = (e: any) => {
-        setOptions([true, false, false])
-    }
-
-    const changeOptionTwo = (e: any) => {
-        setOptions([false, true, false])
-    }
-
-    const changeOptionThree = (e: any) => {
-        setOptions([false, false, true])
-    }
-
-    const goToSettings = (e: any) => {
-        navigate("/settings")
-    }
-
-    const goToSubscriptions = (e: any) => {
-        navigate("/subscriptions")
-    }
-
-    const goToSubscribers = (e: any) => {
-        navigate("/subscribers")
-    }
-
-    const goToCreatingPost = (e: any) => {
-        navigate("/new_post")
+    const goToUrl = (url : string) => {
+        console.log(token.auth_token)
+        if (!cookies.get("auth_token"))
+            navigate(url)
+        else
+            navigate("/login")
     }
 
     return (
@@ -85,7 +44,12 @@ export const UserPage: React.FC = () => {
                 <div className="user_header">
                     <div className="content">
                         <div className="left_content">
-                            <ImageDiv class="user_toolkit" src={userToolkit.settings} alt="settings" onClickFunction={goToSettings}/>
+                            <ImageDiv 
+                                class="user_toolkit" 
+                                src={userToolkit.settings} 
+                                alt="settings" 
+                                onClickFunction={(e: any) => {goToUrl("/settings")}}
+                            />
                             <ImageDiv class="u_avatar" src={userToolkit.avatar} alt="avatar" />
                             <div className="text_info">
                                 <div>
@@ -93,13 +57,22 @@ export const UserPage: React.FC = () => {
                                     <div className="user_page_name">{user.username}</div>
                                 </div>
                                 <div className="subs">
-                                    <div className="user_page_name" onClick={goToSubscriptions}>{user.subscriptions_count} подписок</div>
-                                    <div className="user_page_name" onClick={goToSubscribers} >{user.followers_count} подписчиков</div>
+                                    <div className="user_page_name" onClick={(e: any) => {goToUrl("/subscriptions")}}>
+                                        {ValidateNumber(user.subscriptions_count)} подписок
+                                    </div>
+                                    <div className="user_page_name" onClick={(e: any) => {goToUrl("/subscribers")}}>
+                                        {ValidateNumber(user.followers_count)} подписчиков
+                                    </div>
                                 </div>
                             </div>
                         </div>
                         <div className="right_content">
-                            <ImageDiv class="user_toolkit" src={userToolkit.create_post} alt="create_post" onClickFunction={goToCreatingPost} />
+                            <ImageDiv 
+                                class="user_toolkit" 
+                                src={userToolkit.create_post} 
+                                alt="create_post" 
+                                onClickFunction={(e: any) => {goToUrl("/new_post")}} 
+                            />
                         </div>
                     </div>
                 </div>
@@ -116,6 +89,7 @@ export const UserPage: React.FC = () => {
                                         <ImageDiv class="note" src={userToolkit.birthday} alt="birthday" />
                                         <div className="date">
                                             <div className="first dark_header">{GetDayOfDate(user.birthday)}</div>
+                                            <div className="date_line"></div>
                                             <div className="last dark_name">{GetMonthOfDate(user.birthday)}</div>
                                         </div>
                                     </div>
@@ -123,50 +97,71 @@ export const UserPage: React.FC = () => {
                                 <div className="right_content">
                                     <div className="option">
                                         <ImageDiv class="option_img" src={userToolkit.link} alt="link" />
-                                        <a href={user.email} className="link_name">{user.email}</a>
+                                        <a href={user.email} className="link_name">{user.head}</a>
                                     </div>
                                     <div className="option">
                                         <ImageDiv class="option_img" src={userToolkit.location} alt="location" />
                                         <div className="link_name">{user.address}</div>
                                     </div>
                                     <div className="desc">{user.description}</div>
-                                    <div className="login_name">Регитсрация: {GetMonthOfDate(user.date_joined)} {GetYearOfDate(user.date_joined)} г.</div>
+                                    <div className="login_name">
+                                        Регитсрация: {GetMonthOfDate(user.date_joined)} {GetYearOfDate(user.date_joined)} г.
+                                    </div>
                                 </div>
                                 <div className="space">
                                 </div>
                                 <div className="showing_button">
-                                    <ImageDiv class="img_div" src={userToolkit.showing_button} alt="shw_button" onClickFunction={changeShowing} />
+                                    <ImageDiv 
+                                        class="img_div" 
+                                        src={userToolkit.showing_button} 
+                                        alt="shw_button" 
+                                        onClickFunction={(e: any) => {setShowing(!showing);}} 
+                                    />
                                 </div>
                             </div>
                             <hr></hr>
                         </>
                     :
-                    <div className="blue_line" onClick={changeShowing}>
+                    <div className="blue_line" onClick={(e: any) => {
+                        setShowing(!showing);
+                    }}>
                         Развернуть
                     </div>}
                 </div>
 
                 <div className="buttons">
-                    <Button text="Посты" class={options[0] ? "clicked_static_button" : "static_button"} onClickFunction={changeOptionOne}/>
-                    <Button text="Комментарии" class={options[1] ? "clicked_static_button" : "static_button"} onClickFunction={changeOptionTwo} />
-                    <Button text="Лайки" class={options[2] ? "clicked_static_button" : "static_button"} onClickFunction={changeOptionThree} />
+                    <Button 
+                        text="Посты" 
+                        class={options[0] ? "clicked_static_button" : "static_button"} 
+                        onClickFunction={(e: any) => {setOptions([true, false, false])}}
+                    />
+                    <Button 
+                        text="Комментарии" 
+                        class={options[1] ? "clicked_static_button" : "static_button"} 
+                        onClickFunction={(e: any) => {setOptions([false, true, false])}} 
+                    />
+                    <Button 
+                        text="Лайки" 
+                        class={options[2] ? "clicked_static_button" : "static_button"} 
+                        onClickFunction={(e: any) => {setOptions([false, false, true])}} 
+                    />
                 </div>
 
                 <div className="user_posts">
                         {options[0] ?
-                            posts.map((post: PostProps, index: number) => {
+                            posts.map((post: FullPostProps, index: number) => {
                                 return (
                                     <Post {...post} key={index} />
                                 )
                             })
                         : options[2] ?
-                            likePosts.map((post: PostProps, index: number) => {
+                            likePosts.map((post: FullPostProps, index: number) => {
                                 return (
                                     <Post {...post} key={index} />
                                 )
                             })  
                         : options[1] ?
-                            comments.map((comment: CommentProps, index: number) => {
+                            comments.map((comment: FullCommentProps, index: number) => {
                                 return (
                                     <Comment {...comment} key={index} />
                                 )

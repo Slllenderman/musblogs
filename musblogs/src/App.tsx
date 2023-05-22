@@ -11,8 +11,21 @@ import { MainPage } from './components/MainPage/MainPage';
 import { PostPage } from './components/PostPage/PostPage';
 import { UserPage } from './components/UserPage/UserPage';
 import "./styles/base.scss";
+import React, { useEffect } from 'react';
+import { useAppDispatch } from './store';
+import { getCookies } from './store/actions/getUserInfo';
+import Cookies from 'universal-cookie';
 
 function App() {
+
+  const dispatch = useAppDispatch()
+  const cookies = new Cookies()
+
+  useEffect(() => {
+    if (cookies.get('auth_token'))
+      dispatch(getCookies({token: cookies.get('auth_token'), login: cookies.get('username')}))
+  }, [])
+
   return (
     <div className="content_body">
       <BrowserRouter basename="/">

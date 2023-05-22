@@ -1,12 +1,12 @@
 import { AppDispatch } from "..";
 import axios from "axios";
 import { postFeedSlice } from "../reducers/postFeedSlice";
-import { PostProps } from "../../Types/DataBase";
+import { FullPostProps } from "../../Types/DataBase";
 
 export const fetchPostFeed = (url: string) => async (dispatch: AppDispatch) => {
     try {
         dispatch(postFeedSlice.actions.postFeedFetching())
-        const response = await axios.get<Array<PostProps>>(url)
+        const response = await axios.get<Array<FullPostProps>>(url)
         dispatch(postFeedSlice.actions.postFeedFetchingPosts([...response.data]))
         dispatch(postFeedSlice.actions.postFeedFetchingSuccess())
     }

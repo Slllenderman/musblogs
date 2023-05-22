@@ -1,8 +1,9 @@
 import { AppDispatch } from "..";
 import axios from "axios";
 import { userInfoSlice } from "../reducers/userInfoSlice";
-import { TokenProps, PostProps, CommentProps } from "../../Types/DataBase";
+import { TokenProps, PostProps, CommentProps, UserProps, FullUserProps } from "../../Types/DataBase";
 import Cookies from "universal-cookie";
+import { loginUrl, usersInfoUrl, tokenName, postsUrl, commentsUrl, likesUrl } from "../../urls/bdUrls";
 
 type RegProps = {
     firstname: string,
@@ -15,7 +16,7 @@ type RegProps = {
 }
 
 export const getOtherUserInfo = (props: {login: string}) => async (dispatch: AppDispatch) => {
-    axios.get('' + props.login) // get posts
+    axios.get(postsUrl + "?username=" + props.login) // get posts
     .then((userPosts) => {
         if (userPosts.data[0])
             dispatch(userInfoSlice.actions.userInfoFetchingPosts(userPosts.data[0]))
@@ -24,7 +25,7 @@ export const getOtherUserInfo = (props: {login: string}) => async (dispatch: App
         dispatch(userInfoSlice.actions.userInfoFetchingError(error.message))    
     })
 
-    axios.get('' + props.login) // get comments
+    axios.get(commentsUrl + "?username=" + props.login) // get comments
     .then((userComments) => {
         if (userComments.data[0])
             dispatch(userInfoSlice.actions.userInfoFetchingComments(userComments.data[0]))
@@ -33,7 +34,7 @@ export const getOtherUserInfo = (props: {login: string}) => async (dispatch: App
         dispatch(userInfoSlice.actions.userInfoFetchingError(error.message))    
     })
 
-    axios.get('' + props.login) // get likes
+    axios.get(likesUrl + "?username=" + props.login) // get likes
     .then((userLikes) => {
         if (userLikes.data[0])
             dispatch(userInfoSlice.actions.userInfoFetchingLikes(userLikes.data[0]))
@@ -46,12 +47,12 @@ export const getOtherUserInfo = (props: {login: string}) => async (dispatch: App
 export const login = (loginProps: {username: string, password: string}) => async (dispatch: AppDispatch) => {
     const cookies = new Cookies()
     dispatch(userInfoSlice.actions.userInfoFetching())
-    axios.post('/auth/token/login/', {...loginProps}) //add token
+    axios.post(loginUrl, {...loginProps}) //add token
     .then((response) => {
         console.log(response)
-        axios.get('/api/v1/users/?username=' + loginProps.username, {headers: {
+        axios.get(usersInfoUrl + '?username=' + loginProps.username, {headers: {
             'Content-Type': 'application/json',
-            'Authorization': 'token ' + response.data.auth_token,
+            'Authorization': tokenName + ' ' + response.data.auth_token,
         }}) // get full user info 
         .then((userResponse) => {
             console.log(userResponse)
@@ -64,6 +65,24 @@ export const login = (loginProps: {username: string, password: string}) => async
         dispatch(userInfoSlice.actions.userInfoFetchingSuccess())
     })
     .catch((error: any) => {
+        console.log(error)
+        console.log(error.message)
+        dispatch(userInfoSlice.actions.userInfoFetchingError(error.message))
+    })
+}
+
+export const putUser = (putProps: {newUserInfo: FullUserProps, token: string}) => async (dispatch: AppDispatch) => {
+    axios.put(usersInfoUrl + putProps.newUserInfo.id + "/", {...putProps.newUserInfo}, {headers: {
+        'Content-Type': 'application/json',
+        'Authorization': tokenName + ' ' + putProps.token,
+    }})
+    .then((response) => {
+        console.log('suucessful put')
+        console.log(response)
+        dispatch(userInfoSlice.actions.userInfoFetchingUser(response.data))
+    })
+    .catch((error: any) => {
+        console.log(error)
         console.log(error.message)
         dispatch(userInfoSlice.actions.userInfoFetchingError(error.message))
     })
@@ -71,10 +90,10 @@ export const login = (loginProps: {username: string, password: string}) => async
 
 export const getCookies = (cookiesProps: {token: TokenProps, login: string}) => async (dispatch: AppDispatch) => {
     dispatch(userInfoSlice.actions.userInfoFetching())
-    axios.get('') // get full user info 
+    axios.get(usersInfoUrl + "?username=" + cookiesProps.login) // get full user info 
     .then((userResponse) => {
         dispatch(userInfoSlice.actions.userInfoFetchingUser(userResponse.data[0]))
-        getOtherUserInfo({login: cookiesProps.login})
+        //getOtherUserInfo({login: cookiesProps.login})
     })
     dispatch(userInfoSlice.actions.userInfoFetchingToken(cookiesProps.token))
     dispatch(userInfoSlice.actions.userInfoFetchingSuccess())
@@ -93,4 +112,8 @@ export const registration = (regProps: RegProps) => async (dispatch: AppDispatch
     .catch((error: any) => {
         dispatch(userInfoSlice.actions.userInfoFetchingError(error.message))        
     })
+}
+
+export const logout = () => async (dispatch: AppDispatch) => {
+    dispatch(userInfoSlice.actions.userInfoLogout())
 }

@@ -3,51 +3,77 @@ import { StringMappingType } from "typescript";
 
 export type FullUserProps = {
     id: number,
-    password: string,
-    last_login: string,
-    is_superuser: boolean,
-    username: string,
     first_name: string,
     last_name: string,
+    phone: string,
+    username: string,
+    address: string | undefined,
+    avatar: string | undefined,
+    head: string | undefined,
     email: string,
-    is_staff: boolean,
-    is_active: boolean,
+    birthday: string | undefined,
+    followers_count: number | undefined,
+    subscriptions_count: number | undefined,
     date_joined: string,
-    followers_count: number,
-    subscriptions_count: number,
-    birthday: string,
-    description: string,
-    address: string,
-    avatar: string,
-    head: string,
-    groups: Array<number>,
-    user_permissions: Array<number>
+    description: string | undefined,
 }
 
 export type UserProps = {
     id: number,
-    firstname: string,
-    lastname: string,
-    login: string,
+    first_name: string,
+    last_name: string,
+    username: string,
     avatar: string,
 }
 
 export type CommentProps = {
     id: number,
-    user: UserProps,
     date: string,
-    text: string,
-    post: number
+    content: string,
+    user_id: number,
+    post_id: number
 }
+
+export type FullCommentProps = {
+    id: number,
+    user_id: UserProps,
+    date: string,
+    content: string,
+    post_id: number
+}
+
 
 export type PostProps = {
     id: number,
-    user: UserProps,
     date: string,
-    text: string,
-    comments: number,
-    reposts: number,
-    likes: number,
+    content: string,
+    likes_count: number,
+    user_id: number,
+    repost_id: number,
+}
+
+export type FullPostProps = {
+    id: number,
+    user_id: UserProps,
+    date: string,
+    content: string,
+    likes_count: number,
+    repost_id: number,
+}
+
+export type LikeProps = {
+    post_id: number,
+    user_id: number
+}
+
+export type FollowerProps = {
+    user_id: number,
+    follower_id: number
+}
+
+export type Notifications = {
+    user_id: number,
+    post_id: number,
 }
 
 export type TokenProps = {

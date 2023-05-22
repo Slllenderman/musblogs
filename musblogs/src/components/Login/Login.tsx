@@ -14,7 +14,7 @@ export const Login: React.FC = () => {
 
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
-    const { token } = useAppSelector((state) => state.userInfoReducer)
+    const { token, user } = useAppSelector((state) => state.userInfoReducer)
 
     const [editUsername, setEditUsername]  = useState("")
     const [editPasswrod, setEditPassword] = useState("")
@@ -26,7 +26,7 @@ export const Login: React.FC = () => {
     useEffect(() => {
         if (token.auth_token != "")
             navigate('/userpage')
-    }, [token])
+    }, [user, token])
 
     const changeEditUsername = (e: React.ChangeEvent<HTMLInputElement>) => {
         setEditUsername(e.target.value)

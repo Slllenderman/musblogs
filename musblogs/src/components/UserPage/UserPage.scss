@@ -107,23 +107,27 @@
 
                 .birthday {
                     display: block;
-                    width: 15rem;
                     position: relative;
 
                     .header {
                         font-size: 0.6em;
                         color: #A0C9EF;
+                        padding-left: 0.5rem;
                     }
 
                     .block {
-                        border: 0.4rem solid #D5E8FE;
+                        border: 0.3rem solid #D5E8FE;
                         border-radius: 1rem;
                         margin-top: 0.1rem;
+                        position: relative;
+                        display: inline-flex;
+                        padding-left: 0.5rem;
+                        padding-right: 0.5rem;
 
                         .note {
                             position: absolute;
-                            top: -25%;
-                            right: -10%;
+                            top: -80%;
+                            right: -14%;
                             width: 50%;
                             img {
                                 width: 100%;
@@ -139,7 +143,12 @@
                 
                             .first {
                                 padding-right: 0.3em;
-                                border-right: 0.2rem solid #D5E8FE;
+                            }
+
+                            .date_line {
+                                height: 60%;
+                                border: 0.1rem solid #A0C9EF;
+                                
                             }
 
                             .last {
@@ -151,6 +160,7 @@
 
                 .right_content {
                     margin-left: 5%;
+                    width: 100%;
 
                     .option {
                         display: flex;
