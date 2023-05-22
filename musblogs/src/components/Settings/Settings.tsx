@@ -9,20 +9,31 @@ import { useAppDispatch, useAppSelector } from "../../store";
 import { useNavigate } from "react-router-dom";
 import { putUser } from "../../store/actions/getUserInfo";
 import { GetMonthOfDate, GetYearOfDate } from "../../validate/Validate";
+import Cookies from 'universal-cookie';
+import { FullUserProps } from "../../Types/DataBase";
 
 export const Settings: React.FC = () => {
 
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
+    const cookies = new Cookies()
     const [showRegistration, setShowingReg] = useState(formToolkit.showing);
     const [showBirthday, setShowingBirthday] = useState(formToolkit.showing);
     const [getNote, setNote] = useState(true);
 
     const {token, user} = useAppSelector((state) => state.userInfoReducer);
-    const [editUser, setEditUser] = useState(user);
+    const [first_name, setFirstname] = useState(user.first_name)
+    const [last_name, setLastname] = useState(user.last_name)
+    const [username, setUsername] = useState(user.username)
+    const [phone, setPhone] = useState(user.phone)
+    const [email, setEmail] = useState(user.email)
+    const [birthday, setBirthday] = useState(user.birthday)
+    const [description, setDescription] = useState(user.description)
+    const [head, setHead] = useState(user.head)
+    const [address, setAddress] = useState(user.address)
 
     useEffect(() => {
-        if (token.auth_token === "")
+        if (!cookies.get('auth_token'))
             navigate("/login")
     }, [user, token])
 
@@ -45,15 +56,27 @@ export const Settings: React.FC = () => {
     }
 
     const putNewInfo = (e: any) => {
-        dispatch(putUser({newUserInfo: {...editUser}, token: token.auth_token}))
+        const updateUser: FullUserProps = {
+            ...user,
+            first_name: first_name,
+            last_name: last_name,
+            username: username,
+            phone: phone,
+            email: email,
+            birthday: birthday,
+            description: description,
+            head: head,
+            address: address,
+        }
+        dispatch(putUser({newUserInfo: {...updateUser}, token: cookies.get('auth_token')}))
     }
 
     const changeEditDescription = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-        setEditUser({...user, description: e.target.value})
+        setDescription(e.target.value)
     }
 
     const goBack = (e: any) => {
-        if (token.auth_token != "")
+        if (!cookies.get('auth_token'))
             navigate("/userpage")
         else
             navigate("/login")
@@ -85,30 +108,30 @@ export const Settings: React.FC = () => {
                             <div>
                                 <Input 
                                     class="basic_input" 
-                                    text={editUser.first_name} 
+                                    text={first_name} 
                                     type="text" placeholder="Имя" 
                                     onChangeFunction={(e: React.ChangeEvent<HTMLInputElement>) => {
-                                        setEditUser({...user, first_name: e.target.value})
+                                        setFirstname(e.target.value)
                                     }}
                                 />
                             </div>
                             <div>
                                 <Input 
                                     class="basic_input" 
-                                    text={editUser.last_name}  
+                                    text={last_name}  
                                     type="text" placeholder="Фамилия" 
                                     onChangeFunction={(e: React.ChangeEvent<HTMLInputElement>) => {
-                                        setEditUser({...user, last_name: e.target.value})
+                                        setLastname(e.target.value)
                                     }} 
                                 />
                             </div>
                             <div>
                                 <Input 
                                     class="basic_input" 
-                                    text={editUser.username} 
+                                    text={username} 
                                     type="text" placeholder="Логин" 
                                     onChangeFunction={(e: React.ChangeEvent<HTMLInputElement>) => {
-                                        setEditUser({...user, username: e.target.value})
+                                        setUsername(e.target.value)
                                     }} 
                                 />
                             </div>
@@ -118,20 +141,20 @@ export const Settings: React.FC = () => {
                         <div className="input">
                             <Input 
                                 class="basic_input need" 
-                                text={editUser.phone} 
+                                text={phone} 
                                 type="text" placeholder="Телефон" 
                                 onChangeFunction={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
-                                    setEditUser({...user, phone: e.target.value})
+                                    setPhone(e.target.value)
                                 }} 
                             />
                         </div>
                         <div className="input">
                             <Input 
                                 class="basic_input need" 
-                                text={editUser.email} 
+                                text={email} 
                                 type="text" placeholder="Почта" 
                                 onChangeFunction={(e: React.ChangeEvent<HTMLInputElement>) => {
-                                    setEditUser({...user, email: e.target.value})
+                                    setEmail(e.target.value)
                                 }}
                             />
                         </div>
@@ -140,10 +163,10 @@ export const Settings: React.FC = () => {
                             <div className="input_div">
                                 <Input 
                                     class="basic_input" 
-                                    text={editUser.head} 
+                                    text={head} 
                                     type="text" placeholder="Ссылка на ресурс" 
                                     onChangeFunction={(e: React.ChangeEvent<HTMLInputElement>) => {
-                                        setEditUser({...user, head: e.target.value})
+                                        setHead(e.target.value)
                                     }} 
                                 />
                             </div>
@@ -153,10 +176,10 @@ export const Settings: React.FC = () => {
                             <div className="input_div">
                                 <Input 
                                     class="basic_input" 
-                                    text={editUser.address} 
+                                    text={address} 
                                     type="text" placeholder="Локация" 
                                     onChangeFunction={(e: React.ChangeEvent<HTMLInputElement>) => {
-                                        setEditUser({...user, address: e.target.value})
+                                        setAddress(e.target.value)
                                     }} 
                                 />
                             </div>
@@ -167,9 +190,9 @@ export const Settings: React.FC = () => {
                             <div className="name">День рождения: </div>
                             <div>
                                 <DateInput 
-                                    text={editUser.birthday} 
+                                    text={birthday} 
                                     onChangeFunction={(e: React.ChangeEvent<HTMLInputElement>) => {
-                                        setEditUser({...user, birthday: e.target.value})
+                                        setBirthday(e.target.value)
                                     }} 
                                 />
                             </div>
@@ -185,7 +208,7 @@ export const Settings: React.FC = () => {
                     <div className="description">
                         <div>Описание:</div>
                         <div className="text">
-                            <textarea className="basic_input" onChange={changeEditDescription} value={editUser.description} />
+                            <textarea className="basic_input" onChange={changeEditDescription} value={description} />
                         </div>
                     </div>
                     <div className="save_button">

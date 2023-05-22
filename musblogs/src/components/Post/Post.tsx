@@ -3,22 +3,37 @@ import "./Post.scss";
 import "../../styles/names.scss";
 import { postImages, userToolkit, formToolkit } from "../../images/images";
 import { ImageDiv } from "../BasicComponents/BasicComponents";
-import axios from "axios";
-import { useParams } from "react-router-dom";
-import { usersInfoUrl } from "../../urls/bdUrls";
+import { GetDayOfDate, GetMonthOfDate, GetYearOfDate, ValidateNumber } from "../../validate/Validate";
 import { FullUserProps, FullPostProps } from "../../Types/DataBase";
-import { infUser } from "../../store/infinity";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { commentsUrl } from "../../urls/bdUrls";
 
 export const Post: React.FC<FullPostProps> = ({...post}) => {
+
+    const navigate = useNavigate()
+    const [commentsCount, setCommentsCount] = useState(0)
+
+    const goToPostPage = (e: any) => {
+        navigate("/post/" + post.id)
+    }
+
+    useEffect(() => {
+        axios.get(commentsUrl + "?post_id=" + post.id)
+        .then((response) => {
+            setCommentsCount(response.data.length)
+        })
+    }, [])
+
     return (
-        <div className="post">
+        <div className="post" onClick={goToPostPage}>
             <ImageDiv class="settings" src={formToolkit.other_info} alt="settings" />
              <div className="user_info">
                 <ImageDiv class="user_avatar" src={userToolkit.avatar} alt="avatar" />
                 <div className="text_info">
                     <div className="post_header">{post.user_id.first_name} {post.user_id.last_name}</div>
                     <div className="login_name">{post.user_id.username}</div>
-                    <div className="date login_name">{post.date}</div>
+                    <div className="date login_name">{GetDayOfDate(post.date)} {GetMonthOfDate(post.date)}, {GetYearOfDate(post.date)}</div>
                 </div>
              </div>
              <div className="post_text">
@@ -28,7 +43,7 @@ export const Post: React.FC<FullPostProps> = ({...post}) => {
              <div className="match_info">
                 <div className="block">
                     <ImageDiv src={postImages.comment} alt="comment" />
-                    <div className="login_name number">0</div>
+                    <div className="login_name number">{commentsCount}</div>
                 </div>
                 <div className="block">
                     <ImageDiv src={postImages.repost} alt="repost" />

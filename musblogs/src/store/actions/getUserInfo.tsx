@@ -3,16 +3,21 @@ import axios from "axios";
 import { userInfoSlice } from "../reducers/userInfoSlice";
 import { TokenProps, PostProps, CommentProps, UserProps, FullUserProps } from "../../Types/DataBase";
 import Cookies from "universal-cookie";
-import { loginUrl, usersInfoUrl, tokenName, postsUrl, commentsUrl, likesUrl } from "../../urls/bdUrls";
+import { loginUrl, usersInfoUrl, tokenName, postsUrl, commentsUrl, likesUrl, createUserUrl } from "../../urls/bdUrls";
 
 type RegProps = {
-    firstname: string,
-    lastname: string,
-    login: string,
-    date: string,
-    phone: string,
+    username: string,
     email: string,
     password: string,
+}
+
+type EditProps = {
+    username: string,
+    email: string,
+    first_name: string,
+    last_name: string,
+    birthday: string,
+    phone: string
 }
 
 export const getOtherUserInfo = (props: {login: string}) => async (dispatch: AppDispatch) => {
@@ -61,7 +66,7 @@ export const login = (loginProps: {username: string, password: string}) => async
             dispatch(userInfoSlice.actions.userInfoFetchingUser(userResponse.data[0]))
             //getOtherUserInfo({login: loginProps.login})
         })
-        dispatch(userInfoSlice.actions.userInfoFetchingToken(response.data))
+        dispatch(userInfoSlice.actions.userInfoFetchingToken({...response.data}))
         dispatch(userInfoSlice.actions.userInfoFetchingSuccess())
     })
     .catch((error: any) => {
@@ -95,18 +100,33 @@ export const getCookies = (cookiesProps: {token: TokenProps, login: string}) => 
         dispatch(userInfoSlice.actions.userInfoFetchingUser(userResponse.data[0]))
         //getOtherUserInfo({login: cookiesProps.login})
     })
-    dispatch(userInfoSlice.actions.userInfoFetchingToken(cookiesProps.token))
+    dispatch(userInfoSlice.actions.userInfoFetchingToken({...cookiesProps.token}))
     dispatch(userInfoSlice.actions.userInfoFetchingSuccess())
 }
 
-export const registration = (regProps: RegProps) => async (dispatch: AppDispatch) => {
+export const registration = (regProps: {reg: RegProps, edit: EditProps}) => async (dispatch: AppDispatch) => {
+    const cookies = new Cookies()
     dispatch(userInfoSlice.actions.userInfoFetching())
-    axios.post('', {...regProps}) // create user
+    axios.post(createUserUrl, {...regProps.reg}) // create user
     .then((response) => {
-        axios.post('', {login: regProps.login, password: regProps.password}) // create token
+        const userId = response.data.id
+        axios.post(loginUrl, {username: regProps.reg.username, password: regProps.reg.password}) // create token
         .then((tokenResponse) => {
-            dispatch(userInfoSlice.actions.userInfoFetchingToken(tokenResponse.data))
-            dispatch(userInfoSlice.actions.userInfoFetchingSuccess())
+            dispatch(userInfoSlice.actions.userInfoFetchingToken({...tokenResponse.data}))
+            cookies.set('auth_token', tokenResponse.data.auth_token, { path: '/' })
+            cookies.set('username', regProps.reg.username, { path: '/' })
+            axios.put(usersInfoUrl + userId + "/", {...regProps.edit}, {headers: {
+                'Content-Type': 'application/json',
+                'Authorization': tokenName + ' ' + tokenResponse.data.auth_token,
+            }})
+            .then((fullUserResponse) => {
+                console.log('suucessful put')
+                console.log(fullUserResponse)
+                dispatch(userInfoSlice.actions.userInfoFetchingUser(fullUserResponse.data))
+            }) 
+            .catch((error: any) => {
+                console.log(error)
+            })     
         })
     })
     .catch((error: any) => {

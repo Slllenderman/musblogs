@@ -39,6 +39,7 @@ export type DateInputProps = {
 export type PasswrodProps = {
     class?: string,
     placeholder?: string,
+    text?: string,
     onChangeFunction?: (params: any) => any;
 }
 

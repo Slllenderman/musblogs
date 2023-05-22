@@ -26,7 +26,7 @@ export const Password: React.FC<PasswrodProps> = ({...props}) => {
     return (
         <div className={"password basic_input " + props.class}>
             <div className="passw_input">
-                <Input type={type} placeholder={props.placeholder} onChangeFunction={props.onChangeFunction} class={props.class} />
+                <Input type={type} placeholder={props.placeholder} text={props.text} onChangeFunction={props.onChangeFunction} class={props.class} />
             </div>
             <ImageDiv class="passw_img" src={visible} alt={visible} onClickFunction={changeVisible} />
         </div>

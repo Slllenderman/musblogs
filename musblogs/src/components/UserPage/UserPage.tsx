@@ -43,9 +43,9 @@ export const UserPage: React.FC = () => {
     }, [user, token])
 
     const goToUrl = (url : string) => {
-        console.log(token.auth_token)
-        if (!cookies.get("auth_token"))
+        if (cookies.get("auth_token")) {
             navigate(url)
+        }
         else
             navigate("/login")
     }
