@@ -10,6 +10,7 @@ import { Subscriptions } from './components/Subscriptions/Subscriptions';
 import { MainPage } from './components/MainPage/MainPage';
 import { PostPage } from './components/PostPage/PostPage';
 import { UserPage } from './components/UserPage/UserPage';
+import { OtherUser } from './components/OtherUser/OtherUser';
 import "./styles/base.scss";
 import React, { useEffect } from 'react';
 import { useAppDispatch } from './store';
@@ -42,6 +43,7 @@ function App() {
               <Route path="/new_post" element={<NewPost />} />
               <Route path="/userpage" element={<UserPage />} />
               <Route path="/post/:id" element={<PostPage />} />
+              <Route path="/user/:id" element={<OtherUser />} />
               </Routes>    
           </main>
         </div>

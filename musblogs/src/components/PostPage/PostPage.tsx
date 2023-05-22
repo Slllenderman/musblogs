@@ -32,6 +32,10 @@ export const PostPage: React.FC = () => {
         setFormVisible(!formVisible);
     }
 
+    const goToUser = (e: any) => {
+        navigate("/user/" + post.user_id.id)
+    }
+
     useEffect(() => {
         if (!cookies.get('auth_token')) {
             console.log("non authrized")
@@ -103,12 +107,12 @@ export const PostPage: React.FC = () => {
             <GoBackLine onClickFunction={goToUserPage}/>
             <div className="post_page">
                 <div className="post_info">
-                    <ImageDiv class="settings" src={formToolkit.other_info} alt="settings" />
+                    <ImageDiv class="settings" src={formToolkit.other_info} alt="settings" onClickFunction={goToUser}/>
                     <div className="user_info">
                         <ImageDiv class="user_avatar" src={userToolkit.avatar} alt="avatar" />
                         <div className="text_info">
-                            <div className="post_header">{post.user_id.first_name} {post.user_id.last_name}</div>
-                            <div className="login_name">{post.user_id.username}</div>
+                            <div className="post_header" onClick={goToUser}>{post.user_id.first_name} {post.user_id.last_name}</div>
+                            <div className="login_name" onClick={goToUser}>{post.user_id.username}</div>
                             <div className="date login_name">{GetDayOfDate(post.date)} {GetMonthOfDate(post.date)}, {GetYearOfDate(post.date)}</div>
                         </div>
                     </div>

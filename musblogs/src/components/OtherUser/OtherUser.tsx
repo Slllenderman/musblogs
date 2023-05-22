@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import "./UserPage.scss";
+import "./OtherUser.scss";
 import "../../styles/buttons.scss";
 import "../../styles/inputs.scss";
 import "../../styles/names.scss";
@@ -7,20 +7,26 @@ import { userToolkit } from "../../images/images";
 import { ImageDiv, Button } from "../BasicComponents/BasicComponents";
 import { Comment } from "../Comment/Comment";
 import { Post } from "../Post/Post";
-import { FullPostProps, FullCommentProps, FollowerProps } from "../../Types/DataBase";
+import { FullPostProps, FullCommentProps, FullUserProps, FollowerProps } from "../../Types/DataBase";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../store";
 import { GetDayOfDate, GetMonthOfDate, GetYearOfDate, ValidateNumber } from "../../validate/Validate";
 import Cookies from 'universal-cookie';
 import axios from "axios";
-import { fullPostsUrl, fullCommentsUrl, followersUrl } from "../../urls/bdUrls";
+import { fullPostsUrl, fullCommentsUrl, usersInfoUrl, followersUrl, tokenName } from "../../urls/bdUrls";
+import { useParams } from "react-router-dom";
+import { infUser } from "../../store/infinity";
 
-export const UserPage: React.FC = () => {
+export const OtherUser: React.FC = () => {
+    const { id } = useParams();
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
     const cookies = new Cookies()
-    const {token, user} = useAppSelector((state) => state.userInfoReducer)
+    const userInfo = useAppSelector((state) => state.userInfoReducer)
 
+    const [buttonText, setbuttonText] = useState("Читать")
+
+    const [user, setUser] = useState<FullUserProps>(infUser);
     const [showing, setShowing] = useState(true);
     const [options, setOptions] = useState([true, false, false]);
     const [posts, setPosts] = useState<Array<FullPostProps>>([]);
@@ -29,28 +35,65 @@ export const UserPage: React.FC = () => {
     const [subscribers, setSubscribers] = useState<Array<FollowerProps>>([])
     const [subscriptions, setSubscriptions] = useState<Array<FollowerProps>>([])
 
+    const createFollower = (e: any) => {
+        if (user.id !== 0 && userInfo.user.id !== 0 && buttonText != "Вы читаете") {
+            const postProps: FollowerProps = {
+                user_id: userInfo.user.id,
+                follower_id: user.id
+            }
+            axios.post(followersUrl, {...postProps}, {headers: {
+                'Content-Type': 'application/json',
+                'Authorization': tokenName + ' ' + cookies.get("auth_token"),
+            }})
+            .then((response) => {
+                console.log(response)
+                setbuttonText("Вы читаете")
+            })
+            .catch((error: any) => {
+                console.log(error)
+            })
+        }
+    }
+
     useEffect(() => {
         if (!cookies.get("auth_token"))
             navigate("/login");
         else {
-            axios.get(followersUrl + "?username=" + cookies.get("username"))
-            .then((response) => {
-                setSubscriptions(response.data)
-            })
-            axios.get(followersUrl + "?f_username=" + cookies.get("username"))
-            .then((response) => {
-                setSubscribers(response.data)
-            })
-            axios.get(fullPostsUrl + "?username=" + cookies.get("username"))
-            .then((response) => {
-                setPosts(response.data)
-            })
-            axios.get(fullCommentsUrl + "?username=" + cookies.get("username"))
-            .then((response) => {
-                setComments(response.data)
-            })
+            if (userInfo.user.id.toString() === id)
+                navigate('/userpage')
+            else {
+                axios.get(followersUrl + "?user_id=" + id)
+                .then((sResponse) => {
+                    setSubscriptions(sResponse.data)
+                })
+                axios.get(followersUrl + "?follower_id=" + id)
+                .then((fResponse) => {
+                    setSubscribers(fResponse.data)
+                })
+                axios.get(followersUrl + "?username=" + cookies.get("username") + "&follower_id=" + id)
+                .then((response) => {
+                    console.log(response)
+                    if (response.data.length !== 0)
+                        setbuttonText("Вы читаете")
+                })
+                axios.get(usersInfoUrl + id + "/")
+                .then((response) => {
+                    setUser(response.data)
+                    axios.get(fullPostsUrl + "?user_id=" + id)
+                    .then((postResponse) => {
+                        setPosts(postResponse.data)
+                    })
+                    axios.get(fullCommentsUrl + "?user_id=" + id)
+                    .then((commentResponse) => {
+                        setComments(commentResponse.data)
+                    })
+                })
+                .catch((error: any) => {
+                    console.log(error)
+                })
+            }
         }
-    }, [user, token])
+    }, [])
 
     const goToUrl = (url : string) => {
         if (cookies.get("auth_token")) {
@@ -66,12 +109,6 @@ export const UserPage: React.FC = () => {
                 <div className="user_header">
                     <div className="content">
                         <div className="left_content">
-                            <ImageDiv 
-                                class="user_toolkit" 
-                                src={userToolkit.settings} 
-                                alt="settings" 
-                                onClickFunction={(e: any) => {goToUrl("/settings")}}
-                            />
                             <ImageDiv class="u_avatar" src={userToolkit.avatar} alt="avatar" />
                             <div className="text_info">
                                 <div>
@@ -89,11 +126,10 @@ export const UserPage: React.FC = () => {
                             </div>
                         </div>
                         <div className="right_content">
-                            <ImageDiv 
-                                class="user_toolkit" 
-                                src={userToolkit.create_post} 
-                                alt="create_post" 
-                                onClickFunction={(e: any) => {goToUrl("/new_post")}} 
+                            <Button 
+                                text={buttonText}
+                                class="basic_button"
+                                onClickFunction={createFollower}
                             />
                         </div>
                     </div>
