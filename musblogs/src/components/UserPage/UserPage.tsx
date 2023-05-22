@@ -12,6 +12,8 @@ import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../store";
 import { GetDayOfDate, GetMonthOfDate, GetYearOfDate, ValidateNumber } from "../../validate/Validate";
 import Cookies from 'universal-cookie';
+import axios from "axios";
+import { fullPostsUrl, fullCommentsUrl } from "../../urls/bdUrls";
 
 export const UserPage: React.FC = () => {
     const navigate = useNavigate();
@@ -28,6 +30,16 @@ export const UserPage: React.FC = () => {
     useEffect(() => {
         if (!cookies.get("auth_token"))
             navigate("/login");
+        else {
+            axios.get(fullPostsUrl + "?username=" + cookies.get("username"))
+            .then((response) => {
+                setPosts(response.data)
+            })
+            axios.get(fullCommentsUrl + "?username=" + cookies.get("username"))
+            .then((response) => {
+                setComments(response.data)
+            })
+        }
     }, [user, token])
 
     const goToUrl = (url : string) => {
