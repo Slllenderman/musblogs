@@ -1,9 +1,9 @@
 import { AppDispatch } from "..";
 import axios from "axios";
 import { userInfoSlice } from "../reducers/userInfoSlice";
-import { TokenProps, PostProps, CommentProps, UserProps, FullUserProps } from "../../Types/DataBase";
+import { TokenProps, PostProps, CommentProps, UserProps, FullUserProps, FullFollowerProps, FullPostProps } from "../../Types/DataBase";
 import Cookies from "universal-cookie";
-import { loginUrl, usersInfoUrl, tokenName, postsUrl, commentsUrl, likesUrl, createUserUrl } from "../../urls/bdUrls";
+import { loginUrl, usersInfoUrl, tokenName, createUserUrl, followersUrl, fullCommentsUrl, fullPostsUrl, fullFollowersUrl } from "../../urls/bdUrls";
 
 type RegProps = {
     username: string,
@@ -20,33 +20,69 @@ type EditProps = {
     phone: string
 }
 
+export const getFeedPosts = (props: {username: string, subscriptions: Array<FullFollowerProps>, subscribers: Array<FullFollowerProps>}) => async (dispatch: AppDispatch) => {
+    getOtherUserInfo({login: props.username})
+    let fullPosts: Array<FullPostProps> = []
+    console.log(fullPostsUrl + "?username=" + props.username)
+    axios.get(fullPostsUrl + "?username=" + props.username)
+    .then((response) => {
+        fullPosts = [...fullPosts, ...response.data]
+        console.log(fullPosts)
+    })
+    props.subscriptions.map((sub: FullFollowerProps, index: number) => {
+        console.log("subs " + fullPostsUrl + "?username=" + sub.user_id.id)
+        axios.get(fullPostsUrl + "?username=" + sub.user_id.id)
+        .then((response) => {
+            fullPosts = [...fullPosts, ...response.data]
+            console.log(fullPosts)
+        })        
+    })
+    dispatch(userInfoSlice.actions.userInfoFetchingFeedPosts([...fullPosts]))
+}
+
 export const getOtherUserInfo = (props: {login: string}) => async (dispatch: AppDispatch) => {
-    axios.get(postsUrl + "?username=" + props.login) // get posts
+    axios.get(fullFollowersUrl + "?username=" + props.login)
+    .then((sResponse) => {
+        dispatch(userInfoSlice.actions.userInfoFetchingSubscriptions([...sResponse.data]))
+        dispatch(userInfoSlice.actions.userInfoFetchingClearFeedPosts())
+        axios.get(fullPostsUrl + "?username=" + props.login)
+        .then((response) => {
+            dispatch(userInfoSlice.actions.userInfoFetchingAddFeedPosts([...response.data]))
+        })
+        sResponse.data.map((sub: FullFollowerProps, index: number) => {
+            axios.get(fullPostsUrl + "?user_id=" + sub.follower_id.id)
+            .then((response) => {
+                dispatch(userInfoSlice.actions.userInfoFetchingAddFeedPosts([...response.data]))
+            })        
+        })
+    })
+    axios.get(fullFollowersUrl + "?f_username=" + props.login)
+    .then((fResponse) => {
+        dispatch(userInfoSlice.actions.userInfoFetchingSubscribers([...fResponse.data]))
+    })
+    axios.get(fullPostsUrl + "?username=" + props.login) // get posts
     .then((userPosts) => {
-        if (userPosts.data[0])
-            dispatch(userInfoSlice.actions.userInfoFetchingPosts(userPosts.data[0]))
+        dispatch(userInfoSlice.actions.userInfoFetchingPosts([]))
+        dispatch(userInfoSlice.actions.userInfoFetchingPosts([...userPosts.data]))
     })
     .catch((error: any) => {
         dispatch(userInfoSlice.actions.userInfoFetchingError(error.message))    
     })
-
-    axios.get(commentsUrl + "?username=" + props.login) // get comments
+    axios.get(fullCommentsUrl + "?username=" + props.login) // get comments
     .then((userComments) => {
-        if (userComments.data[0])
-            dispatch(userInfoSlice.actions.userInfoFetchingComments(userComments.data[0]))
+        dispatch(userInfoSlice.actions.userInfoFetchingComments([...userComments.data]))
     })
     .catch((error: any) => {
         dispatch(userInfoSlice.actions.userInfoFetchingError(error.message))    
     })
-
-    axios.get(likesUrl + "?username=" + props.login) // get likes
+    /*axios.get(likesUrl + "?username=" + props.login) // get likes
     .then((userLikes) => {
         if (userLikes.data[0])
             dispatch(userInfoSlice.actions.userInfoFetchingLikes(userLikes.data[0]))
     })
     .catch((error: any) => {
         dispatch(userInfoSlice.actions.userInfoFetchingError(error.message))    
-    })
+    })*/
 }
 
 export const login = (loginProps: {username: string, password: string}) => async (dispatch: AppDispatch) => {
@@ -63,8 +99,8 @@ export const login = (loginProps: {username: string, password: string}) => async
             console.log(userResponse)
             cookies.set('auth_token', response.data.auth_token, { path: '/' })
             cookies.set('username', loginProps.username, { path: '/' })
+            getOtherUserInfo({login: loginProps.username})
             dispatch(userInfoSlice.actions.userInfoFetchingUser(userResponse.data[0]))
-            //getOtherUserInfo({login: loginProps.login})
         })
         dispatch(userInfoSlice.actions.userInfoFetchingToken({...response.data}))
         dispatch(userInfoSlice.actions.userInfoFetchingSuccess())
@@ -98,7 +134,7 @@ export const getCookies = (cookiesProps: {token: TokenProps, login: string}) => 
     axios.get(usersInfoUrl + "?username=" + cookiesProps.login) // get full user info 
     .then((userResponse) => {
         dispatch(userInfoSlice.actions.userInfoFetchingUser(userResponse.data[0]))
-        //getOtherUserInfo({login: cookiesProps.login})
+        getOtherUserInfo({login: cookiesProps.login})
     })
     dispatch(userInfoSlice.actions.userInfoFetchingToken({...cookiesProps.token}))
     dispatch(userInfoSlice.actions.userInfoFetchingSuccess())

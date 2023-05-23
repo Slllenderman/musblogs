@@ -12,6 +12,7 @@ import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../store";
 import { GetDayOfDate, GetMonthOfDate, GetYearOfDate, ValidateNumber } from "../../validate/Validate";
 import Cookies from 'universal-cookie';
+import { getOtherUserInfo } from "../../store/actions/getUserInfo";
 import axios from "axios";
 import { fullPostsUrl, fullCommentsUrl, followersUrl } from "../../urls/bdUrls";
 
@@ -19,36 +20,21 @@ export const UserPage: React.FC = () => {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
     const cookies = new Cookies()
-    const {token, user} = useAppSelector((state) => state.userInfoReducer)
+    const {token, user, posts, comments, likes, subscriptions, subscribers} = useAppSelector((state) => state.userInfoReducer)
 
     const [showing, setShowing] = useState(true);
     const [options, setOptions] = useState([true, false, false]);
-    const [posts, setPosts] = useState<Array<FullPostProps>>([]);
-    const [likePosts, setLikePosts] = useState<Array<FullPostProps>>([]);
-    const [comments, setComments] = useState<Array<FullCommentProps>>([]);
-    const [subscribers, setSubscribers] = useState<Array<FollowerProps>>([])
-    const [subscriptions, setSubscriptions] = useState<Array<FollowerProps>>([])
+    //const [posts, setPosts] = useState<Array<FullPostProps>>([]);
+    //const [likePosts, setLikePosts] = useState<Array<FullPostProps>>([]);
+    //const [comments, setComments] = useState<Array<FullCommentProps>>([]);
+    //const [subscribers, setSubscribers] = useState<Array<FollowerProps>>([])
+    //const [subscriptions, setSubscriptions] = useState<Array<FollowerProps>>([])
 
     useEffect(() => {
         if (!cookies.get("auth_token"))
             navigate("/login");
         else {
-            axios.get(followersUrl + "?username=" + cookies.get("username"))
-            .then((response) => {
-                setSubscriptions(response.data)
-            })
-            axios.get(followersUrl + "?f_username=" + cookies.get("username"))
-            .then((response) => {
-                setSubscribers(response.data)
-            })
-            axios.get(fullPostsUrl + "?username=" + cookies.get("username"))
-            .then((response) => {
-                setPosts(response.data)
-            })
-            axios.get(fullCommentsUrl + "?username=" + cookies.get("username"))
-            .then((response) => {
-                setComments(response.data)
-            })
+            dispatch(getOtherUserInfo({login: cookies.get("username")}))
         }
     }, [user, token])
 
@@ -177,7 +163,7 @@ export const UserPage: React.FC = () => {
                                 )
                             })
                         : options[2] ?
-                            likePosts.map((post: FullPostProps, index: number) => {
+                            likes.map((post: FullPostProps, index: number) => {
                                 return (
                                     <Post {...post} key={index} />
                                 )

@@ -72,7 +72,6 @@ export const OtherUser: React.FC = () => {
                 })
                 axios.get(followersUrl + "?username=" + cookies.get("username") + "&follower_id=" + id)
                 .then((response) => {
-                    console.log(response)
                     if (response.data.length !== 0)
                         setbuttonText("Вы читаете")
                 })
@@ -116,10 +115,10 @@ export const OtherUser: React.FC = () => {
                                     <div className="user_page_name">{user.username}</div>
                                 </div>
                                 <div className="subs">
-                                    <div className="user_page_name" onClick={(e: any) => {goToUrl("/subscriptions")}}>
+                                    <div className="user_page_name" onClick={(e: any) => {goToUrl("/subscriptions/" + id)}}>
                                         {subscriptions.length} подписок
                                     </div>
-                                    <div className="user_page_name" onClick={(e: any) => {goToUrl("/subscribers")}}>
+                                    <div className="user_page_name" onClick={(e: any) => {goToUrl("/subscribers/" + id)}}>
                                         {subscribers.length} подписчиков
                                     </div>
                                 </div>

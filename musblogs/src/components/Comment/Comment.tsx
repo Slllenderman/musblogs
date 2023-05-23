@@ -17,8 +17,12 @@ export const Comment: React.FC<FullCommentProps> = ({...comment}) => {
         navigate("/user/" + comment.user_id.id)
     }
 
+    const goToPost = (e: any) => {
+        navigate("/post/" + comment.post_id)
+    }
+
     return (
-        <div className="comment">
+        <div className="comment" onClick={goToPost}>
             <div className="user_info">
                 <ImageDiv class="user_avatar" src={userToolkit.avatar} alt="avatar" onClickFunction={goToUser} />
                 <div className="text_info">

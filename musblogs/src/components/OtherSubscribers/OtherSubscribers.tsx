@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import "./Subscribers.scss";
+import "./OtherSubscribers.scss";
 import "../../styles/buttons.scss";
 import "../../styles/inputs.scss";
 import "../../styles/names.scss";
@@ -7,32 +7,38 @@ import { GoBackLine } from "../GoBackLine/GoBackLine";
 import { FullFollowerProps } from "../../Types/DataBase";
 import { UserLine } from "../UserLine/UserLine";
 import Cookies from "universal-cookie";
-import { useAppSelector, useAppDispatch } from "../../store";
+import { useAppSelector } from "../../store";
 import { useNavigate } from "react-router-dom";
-import { getOtherUserInfo } from "../../store/actions/getUserInfo";
+import { useParams } from "react-router-dom";
+import axios from "axios";
+import { fullFollowersUrl } from "../../urls/bdUrls";
 
-export const Subscribers: React.FC = () => {
+export const OtherSubscribers: React.FC = () => {
 
+    const { id } = useParams();
     const cookies = new Cookies();
     const navigate = useNavigate();
-    const dispatch = useAppDispatch();
-    const {user, token, subscribers} = useAppSelector((state) => state.userInfoReducer)
+    const {user, token} = useAppSelector((state) => state.userInfoReducer)
+    const [subscribers, setSubscribers] = useState<Array<FullFollowerProps>>([])
 
     useEffect(() => {
         if (!cookies.get('auth_token')) 
             navigate('/login')
         else {
-            dispatch(getOtherUserInfo({login: cookies.get('username')}))
+            axios.get(fullFollowersUrl + "?follower_id=" + id)
+            .then((response) => {
+                setSubscribers([...response.data])
+            })
         }
     }, [user, token])
 
-    const goToUserpage = (e: any) => {
-        navigate('/userpage')
+    const goToUser = (e: any) => {
+        navigate('/user/' + id)
     }
 
     return (
         <div className="feed">
-            <GoBackLine onClickFunction={goToUserpage} />
+            <GoBackLine onClickFunction={goToUser} />
             <div className="subscribers">
                 <div className="subs_info black_big_header">
                     Подписчики ({subscribers.length})

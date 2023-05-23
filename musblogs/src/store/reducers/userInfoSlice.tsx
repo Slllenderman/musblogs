@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { UserProps, FullPostProps, FullCommentProps, FullUserProps, TokenProps } from "../../Types/DataBase";
+import { UserProps, FullPostProps, FullCommentProps, FullUserProps, TokenProps, FollowerProps, FullFollowerProps } from "../../Types/DataBase";
 import { infUser, infPosts, infComments } from "../infinity";
 
 interface UserInfoState {
@@ -8,18 +8,22 @@ interface UserInfoState {
     posts: Array<FullPostProps>,
     comments: Array<FullCommentProps>,
     likes: Array<FullPostProps>,
+    subscribers: Array<FullFollowerProps>,
+    subscriptions: Array<FullFollowerProps>,
+    feedPosts: Array<FullPostProps>,
     isLoading: boolean,
     error: string
 }
 
 const initialState: UserInfoState = {
     user: infUser,
-    token: {
-        auth_token: ""
-    },
-    posts: infPosts,
-    comments: infComments,
-    likes: infPosts,
+    token: { auth_token: "" },
+    posts: [],
+    comments: [],
+    likes: [],
+    subscribers: [],
+    subscriptions: [],
+    feedPosts: [],
     isLoading: false,
     error: ""
 }
@@ -39,13 +43,32 @@ export const userInfoSlice = createSlice({
             state.token.auth_token = action.payload.auth_token           
         },
         userInfoFetchingPosts(state, action: PayloadAction<Array<FullPostProps>>) {
-            state.posts = {...action.payload}            
+            state.posts = [...action.payload]
+        },
+        userInfoFetchingFeedPosts(state, action: PayloadAction<Array<FullPostProps>>) {
+            state.feedPosts = [...action.payload]
+        },
+        userInfoFetchingAddFeedPosts(state, action: PayloadAction<Array<FullPostProps>>) {
+            action.payload.map((elment: FullPostProps, numb: number) => {
+                let index = state.feedPosts.findIndex((element) => element.id === elment.id)
+                if (index === -1)
+                    state.feedPosts.push(elment)
+            })
+        },
+        userInfoFetchingClearFeedPosts(state) {
+            state.feedPosts = []
+        },
+        userInfoFetchingSubscribers(state, action: PayloadAction<Array<FullFollowerProps>>) {
+            state.subscribers = [...action.payload]            
+        },
+        userInfoFetchingSubscriptions(state, action: PayloadAction<Array<FullFollowerProps>>) {
+            state.subscriptions = [...action.payload]            
         },
         userInfoFetchingComments(state, action: PayloadAction<Array<FullCommentProps>>) {
-            state.comments = {...action.payload}            
+            state.comments = [...action.payload]
         },
         userInfoFetchingLikes(state, action: PayloadAction<Array<FullPostProps>>) {
-            state.likes = {...action.payload}            
+            state.likes = [...action.payload]
         },
         userInfoFetchingSuccess(state) {
             state.isLoading = false

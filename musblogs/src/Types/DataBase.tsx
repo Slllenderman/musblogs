@@ -71,6 +71,11 @@ export type FollowerProps = {
     follower_id: number
 }
 
+export type FullFollowerProps = {
+    user_id: UserProps,
+    follower_id: UserProps
+}
+
 export type Notifications = {
     user_id: number,
     post_id: number,

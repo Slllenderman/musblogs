@@ -11,6 +11,8 @@ import { MainPage } from './components/MainPage/MainPage';
 import { PostPage } from './components/PostPage/PostPage';
 import { UserPage } from './components/UserPage/UserPage';
 import { OtherUser } from './components/OtherUser/OtherUser';
+import { OtherSubscribers } from './components/OtherSubscribers/OtherSubscribers';
+import { OtherSubscriptions } from './components/OtherSubscriptions/OtherSubscriptions';
 import "./styles/base.scss";
 import React, { useEffect } from 'react';
 import { useAppDispatch } from './store';
@@ -44,6 +46,8 @@ function App() {
               <Route path="/userpage" element={<UserPage />} />
               <Route path="/post/:id" element={<PostPage />} />
               <Route path="/user/:id" element={<OtherUser />} />
+              <Route path="/subscribers/:id" element={<OtherSubscribers />} />
+              <Route path="/subscriptions/:id" element={<OtherSubscriptions />} />
               </Routes>    
           </main>
         </div>

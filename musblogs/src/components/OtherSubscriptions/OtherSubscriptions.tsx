@@ -1,39 +1,45 @@
 import React, { useState, useEffect } from "react";
-import "./Subscriptions.scss";
+import "./OtherSubscriptions.scss";
 import "../../styles/buttons.scss";
 import "../../styles/inputs.scss";
 import "../../styles/names.scss";
-import { UserLine } from "../UserLine/UserLine";
-import { FullFollowerProps } from "../../Types/DataBase";
 import { GoBackLine } from "../GoBackLine/GoBackLine";
-import { Button } from "../BasicComponents/BasicComponents";
+import { FullFollowerProps } from "../../Types/DataBase";
+import { UserLine } from "../UserLine/UserLine";
 import Cookies from "universal-cookie";
-import { useAppSelector, useAppDispatch } from "../../store";
+import { useAppSelector } from "../../store";
 import { useNavigate } from "react-router-dom";
-import { getOtherUserInfo } from "../../store/actions/getUserInfo";
+import { useParams } from "react-router-dom";
+import axios from "axios";
+import { fullFollowersUrl } from "../../urls/bdUrls";
+import { Button } from "../BasicComponents/BasicComponents";
 
-export const Subscriptions: React.FC = () => {
+export const OtherSubscriptions: React.FC = () => {
 
+    const { id } = useParams();
     const cookies = new Cookies();
     const navigate = useNavigate();
-    const dispatch = useAppDispatch();
-    const {user, token, subscriptions} = useAppSelector((state) => state.userInfoReducer)
+    const {user, token} = useAppSelector((state) => state.userInfoReducer)
+    const [subscriptions, setSubscriptions] = useState<Array<FullFollowerProps>>([])
 
     useEffect(() => {
         if (!cookies.get('auth_token')) 
             navigate('/login')
         else {
-            dispatch(getOtherUserInfo({login: cookies.get('username')}))
+            axios.get(fullFollowersUrl + "?user_id=" + id)
+            .then((response) => {
+                setSubscriptions([...response.data])
+            })
         }
     }, [user, token])
 
-    const goToUserpage = (e: any) => {
-        navigate('/userpage')
+    const goToUser = (e: any) => {
+        navigate('/user/' + id)
     }
 
     return (
         <div className="feed">
-            <GoBackLine  onClickFunction={goToUserpage} />
+            <GoBackLine  onClickFunction={goToUser} />
             <div className="subscriptions">
                 <div className="subs_info black_big_header">
                     Подписки ({subscriptions.length})
@@ -43,7 +49,6 @@ export const Subscriptions: React.FC = () => {
                         return (
                             <div className="subscription">
                                 <UserLine {...sub.follower_id} key={index} />
-                                <Button text="Отписаться" class="basic_button" key={index + subscriptions.length} />
                             </div>
                         )
                     })}
