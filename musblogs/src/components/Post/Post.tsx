@@ -3,14 +3,14 @@ import "./Post.scss";
 import "../../styles/names.scss";
 import { postImages, userToolkit, formToolkit } from "../../images/images";
 import { ImageDiv } from "../BasicComponents/BasicComponents";
-import { GetDayOfDate, GetMonthOfDate, GetYearOfDate, ValidateNumber } from "../../validate/Validate";
-import { FullUserProps, FullPostProps } from "../../Types/DataBase";
+import { GetDayOfDate, GetMonthOfDate, GetYearOfDate } from "../../validate/Validate";
+import { FullPostProps } from "../../Types/DataBase";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { commentsUrl, likesUrl, tokenName } from "../../urls/bdUrls";
 import Cookies from "universal-cookie";
 import { useAppSelector, useAppDispatch } from "../../store";
-import { getCookies } from "../../store/actions/getUserInfo";
+import { getOtherUserInfo } from "../../store/actions/getUserInfo";
 
 export const Post: React.FC<FullPostProps> = ({...post}) => {
 
@@ -21,6 +21,8 @@ export const Post: React.FC<FullPostProps> = ({...post}) => {
     const {user, token} = useAppSelector((state) => state.userInfoReducer)
     const [likes, setLikes] = useState(0)
     const [myLike, setMyLike] = useState(false)
+    const [likeId, setLikeId] = useState(-1)
+    const [isLoading, setLoading] = useState(false)
 
     const goToPostPage = (e: any) => {
         navigate("/post/" + post.id)
@@ -34,6 +36,7 @@ export const Post: React.FC<FullPostProps> = ({...post}) => {
         if (!cookies.get("auth_token"))
             navigate("/login")
         else {
+            setLoading(true)
             axios.get(commentsUrl + "?post_id=" + post.id)
             .then((response) => {
                 setCommentsCount(response.data.length)
@@ -43,7 +46,7 @@ export const Post: React.FC<FullPostProps> = ({...post}) => {
         }
     }, [])
 
-    const createLike = (e: any) => {
+    const updateLike = (e: any) => {
         if (!myLike) {
             const body = {
                 post_id: post.id,
@@ -55,11 +58,29 @@ export const Post: React.FC<FullPostProps> = ({...post}) => {
             }})
             .then((response) => {
                 setMyLike(true)
+                setLikeId(response.data.id)
                 getLikes()
             })
             .catch((error: any) => {
                 console.log(error)
             })
+        }
+        else {
+            if (likeId !== -1) {
+                axios.delete(likesUrl + likeId + "/", {headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': tokenName + ' ' + cookies.get("auth_token"),
+                }})
+                .then((response) => {
+                    setMyLike(false)
+                    setLikeId(-1)
+                    getLikes()
+                    dispatch(getOtherUserInfo({login: cookies.get("username")}))
+                })
+                .catch((error: any) => {
+                    console.log(error)
+                })
+            }
         }
     }
 
@@ -67,14 +88,17 @@ export const Post: React.FC<FullPostProps> = ({...post}) => {
         axios.get(likesUrl + "?post_id=" + post.id)
         .then((response) => {
             setLikes(response.data.length)
+            setLoading(false)
         })
     }
 
     const isMyLike = () => {
         axios.get(likesUrl + "?post_id=" + post.id + "&user_id=" + user.id)
         .then((response) => {
-            if (response.data.length !== 0)
+            if (response.data.length !== 0) {
                 setMyLike(true)
+                setLikeId(response.data[0].id)
+            }
         })
     }
 
@@ -96,15 +120,15 @@ export const Post: React.FC<FullPostProps> = ({...post}) => {
              <div className="match_info">
                 <div className="block">
                     <ImageDiv src={postImages.comment} alt="comment" onClickFunction={goToPostPage}/>
-                    <div className="login_name number">{commentsCount}</div>
+                    <div className="login_name number">{!isLoading ? commentsCount : "..."}</div>
                 </div>
                 <div className="block">
                     <ImageDiv src={postImages.repost} alt="repost" />
                     <div className="login_name number">0</div>
                 </div>
                 <div className="block">
-                    <ImageDiv src={postImages.like} alt="like" onClickFunction={createLike}/>
-                    <div className="login_name number">{likes}</div>
+                    <ImageDiv src={myLike ? postImages.my_like : postImages.like} alt="like" onClickFunction={updateLike}/>
+                    <div className="login_name number">{!isLoading ? likes : "..."}</div>
                 </div>
              </div>
         </div>

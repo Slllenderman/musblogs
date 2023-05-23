@@ -11,6 +11,9 @@ import Cookies from "universal-cookie";
 import { useAppSelector, useAppDispatch } from "../../store";
 import { useNavigate } from "react-router-dom";
 import { getOtherUserInfo } from "../../store/actions/getUserInfo";
+import { UserBlock } from "./UserBlock/UserBlock";
+import axios from "axios";
+import { followersUrl } from "../../urls/bdUrls";
 
 export const Subscriptions: React.FC = () => {
 
@@ -41,10 +44,7 @@ export const Subscriptions: React.FC = () => {
                 <div className="users">
                     {subscriptions.map((sub: FullFollowerProps, index: number) => {
                         return (
-                            <div className="subscription">
-                                <UserLine {...sub.follower_id} key={index} />
-                                <Button text="Отписаться" class="basic_button" key={index + subscriptions.length} />
-                            </div>
+                            <UserBlock {...sub} key={index} />
                         )
                     })}
                 </div>

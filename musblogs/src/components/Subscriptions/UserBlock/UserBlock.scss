@@ -1,0 +1,13 @@
+.subscription {
+    width: 100%;
+    display: flex;
+    flex: 1;
+    align-items: center;
+    align-content: center;
+    justify-content: space-between;
+
+    .basic_button {
+        padding-left: 1em;
+        padding-right: 1em;
+    }
+}

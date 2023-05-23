@@ -37,7 +37,7 @@ export const OtherUser: React.FC = () => {
 
     const createFollower = (e: any) => {
         if (user.id !== 0 && userInfo.user.id !== 0 && buttonText != "Вы читаете") {
-            const postProps: FollowerProps = {
+            const postProps = {
                 user_id: userInfo.user.id,
                 follower_id: user.id
             }

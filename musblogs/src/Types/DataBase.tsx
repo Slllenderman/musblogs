@@ -62,26 +62,31 @@ export type FullPostProps = {
 }
 
 export type LikeProps = {
+    id: number,
     post_id: number,
     user_id: number
 }
 
 export type FullLikeProps = {
+    id: number,
     post_id: FullPostProps,
     user_id: number
 }
 
 export type FollowerProps = {
+    id: number,
     user_id: number,
     follower_id: number
 }
 
 export type FullFollowerProps = {
+    id: number,
     user_id: UserProps,
     follower_id: UserProps
 }
 
 export type Notifications = {
+    id: number,
     user_id: number,
     post_id: number,
 }

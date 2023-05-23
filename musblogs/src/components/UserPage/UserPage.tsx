@@ -7,14 +7,13 @@ import { userToolkit } from "../../images/images";
 import { ImageDiv, Button } from "../BasicComponents/BasicComponents";
 import { Comment } from "../Comment/Comment";
 import { Post } from "../Post/Post";
-import { FullPostProps, FullCommentProps, FollowerProps, FullLikeProps } from "../../Types/DataBase";
+import { FullPostProps, FullCommentProps, FullLikeProps } from "../../Types/DataBase";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../store";
-import { GetDayOfDate, GetMonthOfDate, GetYearOfDate, ValidateNumber } from "../../validate/Validate";
+import { GetDayOfDate, GetMonthOfDate, GetYearOfDate } from "../../validate/Validate";
 import Cookies from 'universal-cookie';
 import { getOtherUserInfo } from "../../store/actions/getUserInfo";
 import axios from "axios";
-import { fullPostsUrl, fullCommentsUrl, followersUrl } from "../../urls/bdUrls";
 
 export const UserPage: React.FC = () => {
     const navigate = useNavigate();
@@ -24,11 +23,6 @@ export const UserPage: React.FC = () => {
 
     const [showing, setShowing] = useState(true);
     const [options, setOptions] = useState([true, false, false]);
-    //const [posts, setPosts] = useState<Array<FullPostProps>>([]);
-    //const [likePosts, setLikePosts] = useState<Array<FullPostProps>>([]);
-    //const [comments, setComments] = useState<Array<FullCommentProps>>([]);
-    //const [subscribers, setSubscribers] = useState<Array<FollowerProps>>([])
-    //const [subscriptions, setSubscriptions] = useState<Array<FollowerProps>>([])
 
     useEffect(() => {
         if (!cookies.get("auth_token"))
@@ -151,7 +145,10 @@ export const UserPage: React.FC = () => {
                     <Button 
                         text="Лайки" 
                         class={options[2] ? "clicked_static_button" : "static_button"} 
-                        onClickFunction={(e: any) => {setOptions([false, false, true])}} 
+                        onClickFunction={(e: any) => {
+                            setOptions([false, false, true])
+                            dispatch(getOtherUserInfo({login: cookies.get("username")}))
+                        }} 
                     />
                 </div>
 
@@ -165,7 +162,7 @@ export const UserPage: React.FC = () => {
                         : options[2] ?
                             likes.map((like_p: FullLikeProps, index: number) => {
                                 return (
-                                    <Post {...like_p.post_id} key={index} />
+                                    <span><Post {...like_p.post_id} key={index} /></span>
                                 )
                             })  
                         : options[1] ?

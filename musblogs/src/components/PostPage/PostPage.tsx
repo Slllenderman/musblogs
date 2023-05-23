@@ -14,7 +14,7 @@ import { useAppDispatch, useAppSelector } from "../../store";
 import { GetDayOfDate, GetMonthOfDate, GetYearOfDate, ValidateNumber } from "../../validate/Validate";
 import Cookies from 'universal-cookie';
 import axios from "axios";
-import { fullPostsUrl, commentsUrl, fullCommentsUrl, postsUrl, tokenName, shortUsersInfoUrl } from "../../urls/bdUrls";
+import { fullPostsUrl, commentsUrl, fullCommentsUrl, postsUrl, tokenName, likesUrl } from "../../urls/bdUrls";
 
 export const PostPage: React.FC = () => {
 
@@ -27,6 +27,9 @@ export const PostPage: React.FC = () => {
     const [post, setPost] = useState<FullPostProps>(infPost);
     const [comments, setComments] = useState<Array<FullCommentProps>>([]);
     const [commentText, setCommentText] = useState("");
+    const [likes, setLikes] = useState(0)
+    const [myLike, setMyLike] = useState(false)
+    const [isLoading, setLoading] = useState(false)
 
     const changeFormVisible = (e: any) => {
         setFormVisible(!formVisible);
@@ -42,6 +45,7 @@ export const PostPage: React.FC = () => {
             navigate('/login')
         }
         else {
+            setLoading(true)
             axios.get(fullPostsUrl + id + "/")
             .then((response) => {
                 setPost(response.data)
@@ -56,6 +60,8 @@ export const PostPage: React.FC = () => {
             .catch((error: any) => {
 
             })
+            isMyLike()
+            getLikes()
         }
     }, [user, token])
 
@@ -102,6 +108,22 @@ export const PostPage: React.FC = () => {
         setCommentText(e.target.value)
     }
 
+    const getLikes = () => {
+        axios.get(likesUrl + "?post_id=" + post.id)
+        .then((response) => {
+            setLikes(response.data.length)
+            setLoading(false)
+        })
+    }
+
+    const isMyLike = () => {
+        axios.get(likesUrl + "?post_id=" + post.id + "&user_id=" + user.id)
+        .then((response) => {
+            if (response.data.length !== 0)
+                setMyLike(true)
+        })
+    }
+
     return (
         <div className="feed">
             <GoBackLine onClickFunction={goToUserPage}/>
@@ -123,15 +145,15 @@ export const PostPage: React.FC = () => {
                     <div className="match_info">
                         <div className="block">
                             <ImageDiv src={postImages.comment} alt="comment" />
-                            <div className="login_name number">0</div>
+                            <div className="login_name number">{comments.length}</div>
                         </div>
                         <div className="block">
                             <ImageDiv src={postImages.repost} alt="repost" />
                             <div className="login_name number">0</div>
                         </div>
                         <div className="block">
-                            <ImageDiv src={postImages.like} alt="like" />
-                            <div className="login_name number">0</div>
+                            <ImageDiv src={myLike ? postImages.my_like : postImages.like} alt="like" />
+                            <div className="login_name number">{!isLoading ? likes : "..."}</div>
                         </div>
                     </div>
                 </div>

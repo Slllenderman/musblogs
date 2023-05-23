@@ -16,6 +16,7 @@ import user_page from "./header/user_page.svg";
 
 import comment from "./post/comment.svg";
 import like from "./post/like.svg";
+import my_like from "./post/my_like.svg";
 import repost from "./post/repost.svg";
 
 import avatar from "./user_toolkit/avatar.svg";
@@ -52,7 +53,8 @@ export const headerImages = {
 export const postImages = {
     comment: comment,
     like: like,
-    repost: repost
+    repost: repost,
+    my_like: my_like
 }
 
 export const userToolkit = {
