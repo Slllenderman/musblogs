@@ -66,6 +66,11 @@ export type LikeProps = {
     user_id: number
 }
 
+export type FullLikeProps = {
+    post_id: FullPostProps,
+    user_id: number
+}
+
 export type FollowerProps = {
     user_id: number,
     follower_id: number

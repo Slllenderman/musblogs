@@ -7,7 +7,7 @@ import { userToolkit } from "../../images/images";
 import { ImageDiv, Button } from "../BasicComponents/BasicComponents";
 import { Comment } from "../Comment/Comment";
 import { Post } from "../Post/Post";
-import { FullPostProps, FullCommentProps, FollowerProps } from "../../Types/DataBase";
+import { FullPostProps, FullCommentProps, FollowerProps, FullLikeProps } from "../../Types/DataBase";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../store";
 import { GetDayOfDate, GetMonthOfDate, GetYearOfDate, ValidateNumber } from "../../validate/Validate";
@@ -163,9 +163,9 @@ export const UserPage: React.FC = () => {
                                 )
                             })
                         : options[2] ?
-                            likes.map((post: FullPostProps, index: number) => {
+                            likes.map((like_p: FullLikeProps, index: number) => {
                                 return (
-                                    <Post {...post} key={index} />
+                                    <Post {...like_p.post_id} key={index} />
                                 )
                             })  
                         : options[1] ?

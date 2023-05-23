@@ -5,9 +5,8 @@ import "../../styles/inputs.scss";
 import "../../styles/names.scss";
 import { Post } from "../Post/Post";
 import { FullPostProps } from "../../Types/DataBase";
-import { infPosts } from "../../store/infinity";
 import { useAppSelector, useAppDispatch } from "../../store";
-import { getFeedPosts, getOtherUserInfo } from "../../store/actions/getUserInfo";
+import { getOtherUserInfo } from "../../store/actions/getUserInfo";
 import Cookies from "universal-cookie";
 import { useNavigate } from "react-router-dom";
 
@@ -16,7 +15,7 @@ export const MainPage: React.FC = () => {
     const dispatch = useAppDispatch();
     const cookies = new Cookies();
     const navigate = useNavigate();
-    const {user, token, feedPosts, subscribers, subscriptions} = useAppSelector((state) => state.userInfoReducer)
+    const {user, token, feedPosts} = useAppSelector((state) => state.userInfoReducer)
 
     useEffect(() => {
         if (!cookies.get("auth_token"))

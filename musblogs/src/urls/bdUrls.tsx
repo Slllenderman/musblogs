@@ -11,6 +11,7 @@ export const fullPostsUrl: string = "/api/v1/full_posts/";
 export const commentsUrl: string = "/api/v1/comments/";
 export const fullCommentsUrl: string = "/api/v1/full_comments/";
 export const likesUrl: string = "/api/v1/likes/";
+export const fullLikesUrl: string = "/api/v1/full_likes/";
 export const followersUrl: string = "/api/v1/followers/";
 export const fullFollowersUrl: string = "/api/v1/full_followers/";
 export const notificationsUrl: string = "/api/v1/notifications/";

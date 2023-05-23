@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { UserProps, FullPostProps, FullCommentProps, FullUserProps, TokenProps, FollowerProps, FullFollowerProps } from "../../Types/DataBase";
+import { UserProps, FullPostProps, FullCommentProps, FullUserProps, TokenProps, FullLikeProps, FullFollowerProps } from "../../Types/DataBase";
 import { infUser, infPosts, infComments } from "../infinity";
 
 interface UserInfoState {
@@ -7,7 +7,7 @@ interface UserInfoState {
     token: TokenProps,
     posts: Array<FullPostProps>,
     comments: Array<FullCommentProps>,
-    likes: Array<FullPostProps>,
+    likes: Array<FullLikeProps>,
     subscribers: Array<FullFollowerProps>,
     subscriptions: Array<FullFollowerProps>,
     feedPosts: Array<FullPostProps>,
@@ -67,7 +67,7 @@ export const userInfoSlice = createSlice({
         userInfoFetchingComments(state, action: PayloadAction<Array<FullCommentProps>>) {
             state.comments = [...action.payload]
         },
-        userInfoFetchingLikes(state, action: PayloadAction<Array<FullPostProps>>) {
+        userInfoFetchingLikes(state, action: PayloadAction<Array<FullLikeProps>>) {
             state.likes = [...action.payload]
         },
         userInfoFetchingSuccess(state) {
@@ -81,10 +81,13 @@ export const userInfoSlice = createSlice({
         userInfoLogout(state) {
             state.user = {...infUser}
             state.token.auth_token = ""
-            state.posts = {...infPosts}
-            state.comments = {...infComments}
-            state.likes = {...infPosts}
+            state.posts = []
+            state.comments = []
+            state.likes = []
             state.error = ""
+            state.subscribers = []
+            state.subscriptions = []
+            state.feedPosts = []
             state.isLoading = false
         }
     }

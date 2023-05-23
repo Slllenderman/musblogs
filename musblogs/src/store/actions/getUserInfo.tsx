@@ -3,7 +3,7 @@ import axios from "axios";
 import { userInfoSlice } from "../reducers/userInfoSlice";
 import { TokenProps, PostProps, CommentProps, UserProps, FullUserProps, FullFollowerProps, FullPostProps } from "../../Types/DataBase";
 import Cookies from "universal-cookie";
-import { loginUrl, usersInfoUrl, tokenName, createUserUrl, followersUrl, fullCommentsUrl, fullPostsUrl, fullFollowersUrl } from "../../urls/bdUrls";
+import { loginUrl, usersInfoUrl, tokenName, createUserUrl, fullLikesUrl, fullCommentsUrl, fullPostsUrl, fullFollowersUrl } from "../../urls/bdUrls";
 
 type RegProps = {
     username: string,
@@ -75,14 +75,14 @@ export const getOtherUserInfo = (props: {login: string}) => async (dispatch: App
     .catch((error: any) => {
         dispatch(userInfoSlice.actions.userInfoFetchingError(error.message))    
     })
-    /*axios.get(likesUrl + "?username=" + props.login) // get likes
+    axios.get(fullLikesUrl + "?username=" + props.login) // get likes
     .then((userLikes) => {
-        if (userLikes.data[0])
-            dispatch(userInfoSlice.actions.userInfoFetchingLikes(userLikes.data[0]))
+        if (userLikes.data)
+            dispatch(userInfoSlice.actions.userInfoFetchingLikes([...userLikes.data]))
     })
     .catch((error: any) => {
         dispatch(userInfoSlice.actions.userInfoFetchingError(error.message))    
-    })*/
+    })
 }
 
 export const login = (loginProps: {username: string, password: string}) => async (dispatch: AppDispatch) => {
