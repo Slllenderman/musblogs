@@ -22,7 +22,7 @@ export const Comment: React.FC<FullCommentProps> = ({...comment}) => {
     }
 
     return (
-        <div className="comment" onClick={goToPost}>
+        <div className="comment">
             <div className="user_info">
                 <ImageDiv class="user_avatar" src={userToolkit.avatar} alt="avatar" onClickFunction={goToUser} />
                 <div className="text_info">
@@ -33,7 +33,7 @@ export const Comment: React.FC<FullCommentProps> = ({...comment}) => {
                     <div className="login_name date">{GetDayOfDate(comment.date)} {GetMonthOfDate(comment.date)}, {GetYearOfDate(comment.date)} {GetTimeOfDate(comment.date)}</div>
                 </div>
             </div>
-            <div className="comment_text">
+            <div className="comment_text" onClick={goToPost}>
                 {comment.content}
             </div>
         </div>

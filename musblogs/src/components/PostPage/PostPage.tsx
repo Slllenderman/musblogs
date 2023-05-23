@@ -14,6 +14,7 @@ import { useAppDispatch, useAppSelector } from "../../store";
 import { GetDayOfDate, GetMonthOfDate, GetYearOfDate, ValidateNumber } from "../../validate/Validate";
 import Cookies from 'universal-cookie';
 import axios from "axios";
+import { getOtherUserInfo } from "../../store/actions/getUserInfo";
 import { fullPostsUrl, commentsUrl, fullCommentsUrl, postsUrl, tokenName, likesUrl } from "../../urls/bdUrls";
 
 export const PostPage: React.FC = () => {
@@ -29,6 +30,7 @@ export const PostPage: React.FC = () => {
     const [commentText, setCommentText] = useState("");
     const [likes, setLikes] = useState(0)
     const [myLike, setMyLike] = useState(false)
+    const [likeId, setLikeId] = useState(-1)
     const [isLoading, setLoading] = useState(false)
 
     const changeFormVisible = (e: any) => {
@@ -45,13 +47,15 @@ export const PostPage: React.FC = () => {
             navigate('/login')
         }
         else {
-            setLoading(true)
             axios.get(fullPostsUrl + id + "/")
             .then((response) => {
                 setPost(response.data)
                 axios.get(fullCommentsUrl + "?post_id=" + id)
                 .then((response) => {
                     setComments([...response.data])
+                    setLoading(true)
+                    isMyLike()
+                    getLikes()
                 })
                 .catch((error: any) => {
 
@@ -60,8 +64,6 @@ export const PostPage: React.FC = () => {
             .catch((error: any) => {
 
             })
-            isMyLike()
-            getLikes()
         }
     }, [user, token])
 
@@ -109,7 +111,7 @@ export const PostPage: React.FC = () => {
     }
 
     const getLikes = () => {
-        axios.get(likesUrl + "?post_id=" + post.id)
+        axios.get(likesUrl + "?post_id=" + id)
         .then((response) => {
             setLikes(response.data.length)
             setLoading(false)
@@ -117,11 +119,51 @@ export const PostPage: React.FC = () => {
     }
 
     const isMyLike = () => {
-        axios.get(likesUrl + "?post_id=" + post.id + "&user_id=" + user.id)
+        axios.get(likesUrl + "?post_id=" + id + "&user_id=" + user.id)
         .then((response) => {
-            if (response.data.length !== 0)
+            if (response.data.length !== 0) {
                 setMyLike(true)
+                setLikeId(response.data[0].id)
+            }
         })
+    }
+
+    const updateLike = (e: any) => {
+        if (!myLike) {
+            const body = {
+                post_id: post.id,
+                user_id: user.id
+            }
+            axios.post(likesUrl, {...body}, {headers: {
+                'Content-Type': 'application/json',
+                'Authorization': tokenName + ' ' + cookies.get("auth_token"),
+            }})
+            .then((response) => {
+                setMyLike(true)
+                setLikeId(response.data.id)
+                getLikes()
+            })
+            .catch((error: any) => {
+                console.log(error)
+            })
+        }
+        else {
+            if (likeId !== -1) {
+                axios.delete(likesUrl + likeId + "/", {headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': tokenName + ' ' + cookies.get("auth_token"),
+                }})
+                .then((response) => {
+                    setMyLike(false)
+                    setLikeId(-1)
+                    getLikes()
+                    dispatch(getOtherUserInfo({login: cookies.get("username")}))
+                })
+                .catch((error: any) => {
+                    console.log(error)
+                })
+            }
+        }
     }
 
     return (
@@ -152,7 +194,7 @@ export const PostPage: React.FC = () => {
                             <div className="login_name number">0</div>
                         </div>
                         <div className="block">
-                            <ImageDiv src={myLike ? postImages.my_like : postImages.like} alt="like" />
+                            <ImageDiv src={myLike ? postImages.my_like : postImages.like} alt="like" onClickFunction={updateLike}/>
                             <div className="login_name number">{!isLoading ? likes : "..."}</div>
                         </div>
                     </div>
