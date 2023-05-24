@@ -8,7 +8,7 @@ import { setupStore } from './store';
 import { InitWS } from './ws_module';
 
 const store = setupStore();
-InitWS(store)
+InitWS()
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
