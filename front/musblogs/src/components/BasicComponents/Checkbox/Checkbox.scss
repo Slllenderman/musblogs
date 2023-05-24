@@ -1,0 +1,13 @@
+.checkbox {
+    padding: 0;
+    margin: 0 auto;
+    display: flex;
+    width: 2em !important;
+    height: 2em !important;
+    padding: 0.3em;
+
+    .checkbox_img {
+        width: 2em !important;
+        user-select: none;
+    }
+}

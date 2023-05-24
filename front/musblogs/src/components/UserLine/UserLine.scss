@@ -1,0 +1,16 @@
+.user_line {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    align-content: center;
+    margin-bottom: 2vh;
+
+    .user_avatar {
+        margin-right: 2vw;
+        width: 6em;
+
+        img {
+            width: 100%;
+        }
+    }
+}

@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+service WsProto{
+    rpc addPostEvent (NewPost) returns (NULL);
+    rpc deletePostEvent (Post) returns (NULL);
+    rpc changePostEvent (Post) returns (NULL);
+    rpc changePostLikeEvent (PostLike) returns (NULL);
+}
+
+
+message Post {
+    int32 id = 1;
+    string date = 2;
+    string content = 3;
+    int32 likes = 4;
+    string username = 5;
+}
+
+message Users {
+    repeated string users = 1;
+}
+
+message NewPost {
+    Users followers = 1;
+    Post post = 2;
+}
+
+message PostLike {
+    int32 post_id = 1;
+    int32 likes = 2;
+}
+
+message NULL {
+    string msg = 1;
+}

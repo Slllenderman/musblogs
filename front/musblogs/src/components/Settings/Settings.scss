@@ -1,0 +1,195 @@
+.feed_content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    position: relative;
+
+    .showing {
+        height: 1.3em;
+    }
+
+    .top_options {
+        display: flex;
+        flex: 1;
+        justify-content: space-between;
+        align-items: center;
+        align-content: center;
+        margin: 2vh;
+        flex-grow: 0;
+
+        .set_img {
+            width: 30%;
+            display: flex;
+            align-items: center;
+            align-content: center;
+
+            img {
+                height: 100%;
+            }
+        }
+
+        .first {
+            justify-content: start;
+            height: 1.3em;
+        }
+
+        .center {
+            justify-content: center;
+            height: 2.8em;
+
+            svg {
+                fill: #6E86DB;
+                height: 100%;
+            }
+        }
+        
+        .last {
+            justify-content: end;
+            height: 2.5em;
+        }
+    }
+
+    .changing {
+        margin: 0 auto;
+        width: 80%;
+        flex-grow: 3;
+        margin-bottom: 2vh;
+
+        .top_changing {
+            display: flex;
+            flex: 1;
+
+            .ch_avatar {
+                width: 28%;
+                margin-right: 2vh;
+
+                img {
+                    width: 100%;
+                }
+            }
+
+            .top_inputs {
+                width: 66%;
+                display: flex;
+                flex: 1;
+                flex-direction: column;
+                justify-content: center;
+
+                .reg_form {
+                    display: inline-flex;
+
+                    .reg_img {
+                        display: inline;
+                        width: 3em;
+
+                        img {
+                            width: 100%;
+                        }
+                    }
+                }
+
+                div {
+                    margin-bottom: 1vh;
+                    width: 100%;
+                    input {
+                        width: 100%;
+                    }
+                }
+            }
+        }
+
+        .center_changing {
+            margin-top: 2vh;
+
+            .input {
+                margin-bottom: 1vh;
+            }
+
+            .img_input {
+                display: flex;
+                flex: 1;
+                align-items: center;
+                align-content: center;
+                margin-bottom: 1vh;
+
+                .img_div {
+                    margin-right: 1em;
+                    width: 1.7em;
+
+                    img {
+                        width: 100%;
+                    }
+                }
+
+                .input_div {
+                    width: 100%;
+                }
+            }
+        }
+
+        .birthday {
+            display: flex;
+            flex: 1;
+            align-items: center;
+            align-content: center;
+
+            .change_note {
+                display: flex;
+                flex: 1;
+                align-items: center;
+                align-content: center;
+                margin-right: 1em;
+                margin-left: 0.3em;
+
+                .note {
+                    text-align: right;
+                    margin-right: 1em;
+                }
+            }
+
+            .birthday_form {
+                display: flex;
+                flex: 1;
+                align-items: center;
+                align-content: center;
+                
+                .name {
+                    margin-right: 1em;
+                }
+            }
+
+            img {
+                width: 2.8em;
+            }
+        }
+
+        .description {
+            margin-top: 1vh;
+            
+            .text {
+                width: 100%;
+
+                .basic_input {
+                    margin-top: 1vh;
+                    width: 100% !important;
+                    min-height: 100px;
+                    resize: none;
+                }
+            }
+        }
+
+        .save_button {
+            margin: 0 auto;
+            margin-top: 2vh;
+            display: flex;
+
+            div {
+                margin: 0 auto;
+                display: inline-block;
+                padding: 0.5em;
+                padding-left: 1em;
+                padding-right: 1em;
+            }
+        }
+    }
+}

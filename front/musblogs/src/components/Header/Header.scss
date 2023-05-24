@@ -1,0 +1,25 @@
+header {
+    div {
+        display: flex;
+        align-content: center;
+    }
+
+    .center_content {
+        justify-content: space-between;
+        margin-left: -2em;
+        
+        .search_form {
+            margin-left: 1.5em;
+        }
+    }
+
+    .header_img {
+        height: 1.8em;
+        margin-left: 1em;
+    }
+
+    .header_img img {
+        height: 100%;
+    }
+}
+

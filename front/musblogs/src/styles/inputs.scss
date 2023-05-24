@@ -1,0 +1,24 @@
+.search_input {
+    border: 0.15em solid #C7C7C7;
+    border-radius: 0.5em;
+    padding: 0.5em;
+}
+
+.basic_input {
+    border: 0.1rem solid #84B5FF;
+    border-radius: 0.5em;
+    padding: 0.5em;
+    padding-left: 1em;
+}
+
+.basic_input:focus {
+    outline: none;
+}
+
+.not_need {
+    background-color: white;
+}
+
+.need {
+    background-color: #E2F1FF;
+}

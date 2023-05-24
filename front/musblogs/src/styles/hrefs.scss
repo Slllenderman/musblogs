@@ -1,0 +1,10 @@
+.basic_href {
+    user-select: none;
+    color: #84B5FF;
+    transition-duration: 0.3s;
+}
+
+.basic_href:hover {
+    text-decoration: underline;
+    transition-duration: 0.3s;
+}
