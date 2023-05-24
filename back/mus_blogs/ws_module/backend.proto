@@ -1,7 +1,7 @@
 syntax = "proto3";
 
 service WsProto{
-    rpc addPostEvent (NewPost) returns (NULL);
+    rpc addPostEvent (NewPost) returns (Users);
     rpc deletePostEvent (Post) returns (NULL);
     rpc changePostEvent (Post) returns (NULL);
     rpc changePostLikeEvent (PostLike) returns (NULL);
@@ -17,7 +17,7 @@ message Post {
 }
 
 message Users {
-    repeated string users = 1;
+    repeated int32 users = 1;
 }
 
 message NewPost {

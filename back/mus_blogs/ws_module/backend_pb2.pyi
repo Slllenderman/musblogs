@@ -44,5 +44,5 @@ class PostLike(_message.Message):
 class Users(_message.Message):
     __slots__ = ["users"]
     USERS_FIELD_NUMBER: _ClassVar[int]
-    users: _containers.RepeatedScalarFieldContainer[str]
-    def __init__(self, users: _Optional[_Iterable[str]] = ...) -> None: ...
+    users: _containers.RepeatedScalarFieldContainer[int]
+    def __init__(self, users: _Optional[_Iterable[int]] = ...) -> None: ...
