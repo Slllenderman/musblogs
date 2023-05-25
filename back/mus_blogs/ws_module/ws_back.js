@@ -14,10 +14,8 @@ const service = {
         console.log('grpc requested')
         console.log(call.request)
         call.request.followers.users.map((item) => {
-               io.sockets.in("u" + item).emit('addpost', 'mess')
-               io.sockets.in("c" + item).emit('addpost', 'mess')
+               io.sockets.in("u" + item).emit('addpost', call.request.post )
         })
-        
         callback(null, response)
     },
     deletePostEvent : function(call, callback) {
