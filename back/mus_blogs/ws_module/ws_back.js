@@ -9,9 +9,15 @@ const protoDescriptor = grpc.loadPackageDefinition(packageDefinition);
 
 const service = {
     addPostEvent : function(call, callback) {
+        const request = call.request
         const response = { msg : 'OK'}
         console.log('grpc requested')
-        io.emit('addpost', "mess")
+        console.log(call.request)
+        call.request.followers.users.map((item) => {
+               io.sockets.in("u" + item).emit('addpost', 'mess')
+               io.sockets.in("c" + item).emit('addpost', 'mess')
+        })
+        
         callback(null, response)
     },
     deletePostEvent : function(call, callback) {
@@ -37,19 +43,20 @@ const service = {
 io.on('connection', (socket) => {
     console.log('WebSocket connection established');
     
-    socket.emit('addpost', {'post' : 'post_info'})
+    socket.on('init', (user) => {
+        console.log(user)
+        socket.join("u" + user)
+    })
 
-    socket.on('setActivePage', () => {
+    socket.on('setActivePage', (page) => {
+        socket.leave("c" + page.old)
+        socket.join("c" + page.new)
         socket.emit('OK')
     })
 
     socket.on('disconnect', () => {
         console.log('WebSocket connection closed');
     });
-
-    socket.on('mess', () => {
-        console.log('assas')
-    })
 });
 
 
