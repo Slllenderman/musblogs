@@ -18,41 +18,76 @@ import React, { useEffect } from 'react';
 import { useAppDispatch } from './store';
 import { getCookies } from './store/actions/getUserInfo';
 import Cookies from 'universal-cookie';
+import io from 'socket.io-client'
+import { useAppSelector } from './store'
+import { useState } from 'react';
+import socket from './ws_module';
+import { userInfoFetchingAddFeedPosts } from './store/reducers/userInfoSlice';
+import { FullFollowerProps, FullPostProps, UserProps } from './Types/DataBase';
 
 function App() {
+	const dispatch = useAppDispatch()
+	const cookies = new Cookies()
+	const {user} = useAppSelector((state) => state.userInfoReducer)
 
-  const dispatch = useAppDispatch()
-  const cookies = new Cookies()
+	useEffect(() => {
+		if (cookies.get('auth_token'))
+		dispatch(getCookies({token: cookies.get('auth_token'), login: cookies.get('username')}))
+	}, [])
 
-  useEffect(() => {
-    if (cookies.get('auth_token'))
-      dispatch(getCookies({token: cookies.get('auth_token'), login: cookies.get('username')}))
-  }, [])
 
-  return (
-    <div className="content_body">
-      <BrowserRouter basename="/">
-        <Header />
-        <div className='dynamic_content'>
-          <main>
-            <Routes>
-              <Route path="/" element={<MainPage />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/registration" element={<Registration />} />
-              <Route path="/subscribers" element={<Subscribers />} />
-              <Route path="/subscriptions" element={<Subscriptions />} />
-              <Route path="/settings" element={<Settings />} />
-              <Route path="/new_post" element={<NewPost />} />
-              <Route path="/userpage" element={<UserPage />} />
-              <Route path="/post/:id" element={<PostPage />} />
-              <Route path="/user/:id" element={<OtherUser />} />
-              <Route path="/subscribers/:id" element={<OtherSubscribers />} />
-              <Route path="/subscriptions/:id" element={<OtherSubscriptions />} />
-              </Routes>    
-          </main>
-        </div>
-      </BrowserRouter>
-    </div>
+	useEffect(() => {
+		if(user.id != 0){
+			socket.emit('init', user.id)
+			socket.emit('setActivePage', 0)
+		}
+
+		socket.on('addpost', (post_ : any) => {
+			console.log(post_)
+			let user_ : UserProps = {
+				id : user.id,
+				first_name : user.first_name,
+				last_name : user.last_name, 
+				username : user.username,
+				avatar : ""
+			}
+			let post : FullPostProps = {
+				id : post_.id,
+				user_id : user_,
+				date : "2023-05-25",
+				content : post_.content,
+				likes_count : 0,
+				repost_id : 0
+			}
+			dispatch(userInfoFetchingAddFeedPosts([post]))
+		})
+		
+	}, [user])
+
+	return (
+		<div className="content_body">
+		<BrowserRouter basename="/">
+			<Header />
+			<div className='dynamic_content'>
+			<main>
+				<Routes>
+				<Route path="/" element={<MainPage />} />
+				<Route path="/login" element={<Login />} />
+				<Route path="/registration" element={<Registration />} />
+				<Route path="/subscribers" element={<Subscribers />} />
+				<Route path="/subscriptions" element={<Subscriptions />} />
+				<Route path="/settings" element={<Settings />} />
+				<Route path="/new_post" element={<NewPost />} />
+				<Route path="/userpage" element={<UserPage />} />
+				<Route path="/post/:id" element={<PostPage />} />
+				<Route path="/user/:id" element={<OtherUser />} />
+				<Route path="/subscribers/:id" element={<OtherSubscribers />} />
+				<Route path="/subscriptions/:id" element={<OtherSubscriptions />} />
+				</Routes>    
+			</main>
+			</div>
+		</BrowserRouter>
+		</div>
   );
 }
 

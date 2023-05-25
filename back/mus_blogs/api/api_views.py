@@ -4,7 +4,9 @@ from . import serializers
 from rest_framework.response import Response
 from django.db.models import F
 from django.contrib.auth.hashers import make_password
-
+from ws_module import backend_pb2_grpc, backend_pb2
+import grpc
+from datetime import datetime
 
 class FollowersViewset(viewsets.ModelViewSet):
     queryset = models.Followers.objects.all()
@@ -156,9 +158,18 @@ class PostsViewset(viewsets.ModelViewSet):
             return Response(status=status.HTTP_400_BAD_REQUEST, data='content or user is absent')
 
         post = serializers.PostsSerializer(data=request.data)
-
         if post.is_valid():
             post.save()
+            post_copy = models.Posts.objects.last()
+            channel = grpc.insecure_channel('localhost:50051')
+            stub = backend_pb2_grpc.WsProtoStub(channel)
+            user = models.Profile.objects.get(pk=post.data.get('user_id'))
+            post_ = backend_pb2.Post(id=post_copy.pk, content=post_copy.content, likes=0,username=user.username)
+            followers = list(models.Followers.objects.filter(follower_id=request.data.get('user_id')).values_list('user_id', flat=True))
+            followers.append(user.id)
+            print(followers)
+            post_m = backend_pb2.NewPost(followers=backend_pb2.Users(users=followers), post=post_)
+            feature = stub.addPostEvent(post_m)
             return Response(data=post.data, status=status.HTTP_201_CREATED)
         else:
             return Response(status=status.HTTP_400_BAD_REQUEST, data='unable to parse the body')

@@ -25,7 +25,7 @@ const initialState: UserInfoState = {
     subscriptions: [],
     feedPosts: [],
     isLoading: false,
-    error: ""
+    error: "",
 }
 
 export const userInfoSlice = createSlice({
@@ -37,10 +37,10 @@ export const userInfoSlice = createSlice({
             state.error = ""
         },
         userInfoFetchingUser(state, action: PayloadAction<FullUserProps>) {
-            state.user = {...action.payload}            
+            state.user = {...action.payload}       
         },
         userInfoFetchingToken(state, action: PayloadAction<TokenProps>) {
-            state.token.auth_token = action.payload.auth_token           
+            state.token.auth_token = action.payload.auth_token      
         },
         userInfoFetchingPosts(state, action: PayloadAction<Array<FullPostProps>>) {
             state.posts = [...action.payload]
@@ -93,6 +93,6 @@ export const userInfoSlice = createSlice({
     }
 })
 
-export const {userInfoLogout, userInfoFetchingToken} = userInfoSlice.actions;
+export const {userInfoLogout, userInfoFetchingToken, userInfoFetchingAddFeedPosts} = userInfoSlice.actions;
 
 export default userInfoSlice.reducer;
