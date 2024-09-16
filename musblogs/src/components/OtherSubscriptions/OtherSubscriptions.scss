@@ -1,0 +1,35 @@
+.feed {
+    .subscriptions {
+        margin: 0 auto;
+        background-color: white;
+        width: 100%;
+
+        .users, .subs_info {
+            margin: 0 auto;
+            width: 80%;
+        }
+
+        .users {
+            margin-bottom: 4vh;
+            margin-top: 4vh;
+
+            .subscription {
+                width: 100%;
+                display: flex;
+                flex: 1;
+                align-items: center;
+                align-content: center;
+                justify-content: space-between;
+
+                .basic_button {
+                    padding-left: 1em;
+                    padding-right: 1em;
+                }
+            }
+        }
+
+        .subs_info {
+            margin-top: 2vh;
+        }
+    }
+}

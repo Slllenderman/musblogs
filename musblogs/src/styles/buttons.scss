@@ -1,0 +1,27 @@
+.basic_button, .bottom_button, .static_button, .clicked_static_button {
+    background-color: #84B5FF;
+    border-radius: 0.5em;
+    padding: 0.3em;
+    color: white;
+    font-weight: bold;
+    user-select: none;
+    transition-duration: 0.3s;
+    text-align: center;
+}
+
+.basic_button:hover, .bottom_button:hover {
+    background-color: #6AA6FF;
+    transition-duration: 0.3s;
+}
+
+.bottom_button {
+    border-radius: 0 0 0.5em 0.5em;
+}
+
+.static_button {
+    background-color: #A0C9EF;
+}
+
+.clicked_static_button {
+    background-color: #6E86DB;
+}

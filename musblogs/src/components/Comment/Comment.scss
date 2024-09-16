@@ -1,0 +1,43 @@
+.comment {
+    width: 100%;
+    margin-bottom: 3vh;
+
+    .user_info {
+        display: flex;
+        flex: 1;
+        align-items: center;
+        align-content: center;
+        justify-content: space-between;
+        margin-bottom: 0.3em;
+        height: 5rem;
+        position: relative;
+
+        .user_avatar {
+            height: 100%;
+
+            img {
+                width: 100%;
+                height: 100%;
+            }
+        }
+
+        .text_info {
+            height: 100%;
+            width: 88%;
+            display: flex;
+            flex: 1;
+            flex-direction: column;
+            align-content: space-between;
+            justify-content: space-between;
+            margin-left: 1em;
+
+            .date {
+                text-align: right;
+            }
+        }
+    }
+
+    .comment_text {
+        text-align: justify;
+    }
+}

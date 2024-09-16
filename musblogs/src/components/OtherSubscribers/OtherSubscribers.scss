@@ -1,0 +1,21 @@
+.feed {
+    .subscribers {
+        margin: 0 auto;
+        background-color: white;
+        width: 100%;
+
+        .users, .subs_info {
+            margin: 0 auto;
+            width: 80%;
+        }
+
+        .users {
+            margin-bottom: 4vh;
+            margin-top: 4vh;
+        }
+
+        .subs_info {
+            margin-top: 2vh;
+        }
+    }
+}
